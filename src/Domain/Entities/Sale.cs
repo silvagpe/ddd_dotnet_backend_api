@@ -19,12 +19,10 @@ public class Sale : Entity, IAggregateRoot
 
     // External Identity pattern with denormalized details
     public int CustomerId { get; private set; }
-    public string CustomerName { get; private set; }
-    public string CustomerEmail { get; private set; }
+    public Customer Customer { get; private set; }    
 
     public int BranchId { get; private set; }
-    public string BranchName { get; private set; }
-    public string BranchLocation { get; private set; }
+    public Branch Branch { get; private set; }    
 
     public SaleStatus Status { get; private set; }
     public Money TotalAmount { get; private set; }
@@ -38,34 +36,31 @@ public class Sale : Entity, IAggregateRoot
     private Sale() { }  // For EF Core
 
     public Sale(
-        int customerId,
-        string customerName,
-        string customerEmail,
-        int branchId,
-        string branchName,
-        string branchLocation,
+        Customer customer,
+        Branch branch,
         DateTime saleDate)
     {
         SaleNumber = GenerateSaleNumber();
         SaleDate = saleDate;
-        CustomerId = customerId;
-        CustomerName = customerName ?? throw new ArgumentNullException(nameof(customerName));
-        CustomerEmail = customerEmail ?? throw new ArgumentNullException(nameof(customerEmail));
-        BranchId = branchId;
-        BranchName = branchName ?? throw new ArgumentNullException(nameof(branchName));
-        BranchLocation = branchLocation ?? throw new ArgumentNullException(nameof(branchLocation));
+        Customer = customer ?? throw new ArgumentNullException(nameof(customer));
+        CustomerId = customer.Id;
+        Branch = branch ?? throw new ArgumentNullException(nameof(branch));        
+        BranchId = branch.Id;
         Status = SaleStatus.Created;
         TotalAmount = Money.Zero();
 
         _domainEvents.Add(new SaleCreatedEvent(this));
     }
 
-    public void AddItem(int productId, string productName, string productCategory, int quantity, Money unitPrice)
+    public void AddItem(Product product, int quantity, Money unitPrice)
     {
-        if (_items.Any(i => i.Id == productId))
-            throw new BusinessRuleException($"Product {productName} is already in the sale. Update the quantity instead.");
+        if (product == null)
+            throw new ArgumentNullException(nameof(product));
 
-        var saleItem = new SaleItem(productId, productName, productCategory, quantity, unitPrice);
+        if (_items.Any(i => i.ProductId == product.Id))
+            throw new BusinessRuleException($"Product {product.Name} is already in the sale. Update the quantity instead.");
+
+        var saleItem = new SaleItem(product, quantity, unitPrice);
         _items.Add(saleItem);
 
         RecalculateTotalAmount();
@@ -85,7 +80,7 @@ public class Sale : Entity, IAggregateRoot
 
     public void RemoveItem(int productId)
     {
-        var item = _items.FirstOrDefault(i => i.Id == productId);
+        var item = _items.FirstOrDefault(i => i.ProductId == productId);
         if (item == null)
             throw new BusinessRuleException($"Product with ID {productId} not found in this sale");
 

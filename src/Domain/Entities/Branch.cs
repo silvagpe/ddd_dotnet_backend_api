@@ -11,6 +11,8 @@ public class Branch : Entity, IAggregateRoot
     public string ZipCode { get; private set; }
     public string Phone { get; private set; }
 
+    public ICollection<Sale> Sales { get; set; } = new List<Sale>();
+
     private Branch() { }  // For EF Core
 
     public Branch(string name, string address, string city, string state, string zipCode, string phone)

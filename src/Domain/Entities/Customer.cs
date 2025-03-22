@@ -10,6 +10,8 @@ public class Customer : Entity, IAggregateRoot
     public string Phone { get; private set; }
     public string FullName => $"{FirstName} {LastName}";
 
+    public ICollection<Sale> Sales { get; set; } = new List<Sale>();
+
     private Customer() { }  // For EF Core
 
     public Customer(string firstName, string lastName, string email, string phone)

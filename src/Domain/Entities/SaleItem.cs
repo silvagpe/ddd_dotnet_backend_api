@@ -7,6 +7,8 @@ namespace DeveloperStore.Domain.Entities;
 public class SaleItem : Entity
 {
     // External Identity pattern with denormalized product details
+    public int ProductId { get; private set; }
+    public Product Product { get; private set; }
     public string ProductName { get; private set; }
     public string ProductCategory { get; private set; }
 
@@ -17,10 +19,11 @@ public class SaleItem : Entity
 
     // Navigation property - EF Core
     public int SaleId { get; private set; }
+    public Sale Sale { get; private set; }    
 
     private SaleItem() { }  // For EF Core
 
-    public SaleItem(int productId, string productName, string productCategory, int quantity, Money unitPrice)
+    public SaleItem(Product product, int quantity, Money unitPrice)
     {
         if (quantity <= 0)
             throw new BusinessRuleException("Quantity must be greater than zero");
@@ -28,9 +31,8 @@ public class SaleItem : Entity
         if (quantity > 20)
             throw new BusinessRuleException("Cannot sell more than 20 identical items");
 
-        Id = productId;
-        ProductName = productName ?? throw new ArgumentNullException(nameof(productName));
-        ProductCategory = productCategory ?? throw new ArgumentNullException(nameof(productCategory));
+        Product = product ?? throw new ArgumentNullException(nameof(product));
+        ProductId = product.Id;
         Quantity = quantity;
         UnitPrice = unitPrice ?? throw new ArgumentNullException(nameof(unitPrice));
         Discount = CalculateDiscount(quantity);

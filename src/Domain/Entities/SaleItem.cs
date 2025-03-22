@@ -7,7 +7,6 @@ namespace DeveloperStore.Domain.Entities;
 public class SaleItem : Entity
 {
     // External Identity pattern with denormalized product details
-    public int ProductId { get; private set; }
     public string ProductName { get; private set; }
     public string ProductCategory { get; private set; }
 
@@ -29,7 +28,7 @@ public class SaleItem : Entity
         if (quantity > 20)
             throw new BusinessRuleException("Cannot sell more than 20 identical items");
 
-        ProductId = productId;
+        Id = productId;
         ProductName = productName ?? throw new ArgumentNullException(nameof(productName));
         ProductCategory = productCategory ?? throw new ArgumentNullException(nameof(productCategory));
         Quantity = quantity;

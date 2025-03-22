@@ -9,12 +9,15 @@ public class Product : Entity
     public string Description { get; private set; }
     public Money Price { get; private set; }
     public string Category { get; private set; }
-    public string ImageUrl { get; private set; }
+    public string? ImageUrl { get; private set; }
 
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
     private Product() { }  // For EF Core
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
 
-    public Product(string name, string description, Money price, string category, string imageUrl = null)
+    public Product(long id, string name, string description, Money price, string category, string? imageUrl = null)
     {
+        Id = id;
         Name = name ?? throw new ArgumentNullException(nameof(name));
         Description = description ?? throw new ArgumentNullException(nameof(description));
         Price = price ?? throw new ArgumentNullException(nameof(price));
@@ -22,7 +25,7 @@ public class Product : Entity
         ImageUrl = imageUrl;
     }
 
-    public void UpdateDetails(string name, string description, Money price, string category, string imageUrl = null)
+    public void UpdateDetails(string name, string description, Money price, string category, string? imageUrl = null)
     {
         Name = name ?? throw new ArgumentNullException(nameof(name));
         Description = description ?? throw new ArgumentNullException(nameof(description));

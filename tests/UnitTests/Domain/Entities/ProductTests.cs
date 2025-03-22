@@ -1,16 +1,25 @@
 using DeveloperStore.Domain.Entities;
 using DeveloperStore.Domain.ValueObjects;
+using SharpAbp.Abp.Snowflakes;
 using Xunit;
 
 namespace DeveloperStore.UnitTests.Domain.Entities;
 
 public class ProductTests
 {
+
+    private readonly Snowflake _snowflakeIdGenerator;
+
+    public ProductTests()
+    {
+        _snowflakeIdGenerator = new Snowflake(workerId: 1, datacenterId: 1);
+    }
+
     [Fact]
     public void Constructor_ShouldInitializeProperties()
     {
         var price = new Money(100);
-        var product = new Product("ProductName", "Description", price, "Category", "ImageUrl");
+        var product = new Product(_snowflakeIdGenerator.NextId(), "ProductName", "Description", price, "Category", "ImageUrl");
 
         Assert.Equal("ProductName", product.Name);
         Assert.Equal("Description", product.Description);
@@ -23,7 +32,7 @@ public class ProductTests
     public void UpdateDetails_ShouldUpdateProperties()
     {
         var price = new Money(100);
-        var product = new Product("ProductName", "Description", price, "Category", "ImageUrl");
+        var product = new Product(_snowflakeIdGenerator.NextId(), "ProductName", "Description", price, "Category", "ImageUrl");
 
         product.UpdateDetails("NewName", "NewDescription", new Money(200), "NewCategory", "NewImageUrl");
 

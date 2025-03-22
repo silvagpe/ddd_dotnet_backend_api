@@ -2,7 +2,7 @@ namespace DeveloperStore.Domain.Common;
 
 public abstract class Entity
 {
-    public int Id { get; protected set; }
+    public long Id { get; protected set; }
 
     public override bool Equals(object obj)
     {

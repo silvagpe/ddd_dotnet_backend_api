@@ -3,7 +3,7 @@ using DeveloperStore.Domain.Exceptions;
 using DeveloperStore.Domain.ValueObjects;
 using Xunit;
 
-namespace UnitTests.Domain.ValueObjects;
+namespace DeveloperStore.UnitTests.Domain.ValueObjects;
 
 public class DiscountTests
 {

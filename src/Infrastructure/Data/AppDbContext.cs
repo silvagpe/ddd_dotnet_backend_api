@@ -20,9 +20,13 @@ public class AppDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
+        SetAllLowercase(modelBuilder);
+
         // Branch configuration
         modelBuilder.Entity<Branch>()
             .HasKey(b => b.Id);
+
+        SeedBranchData(modelBuilder);
 
         // Customer configuration
         modelBuilder.Entity<Customer>()
@@ -68,6 +72,49 @@ public class AppDbContext : DbContext
 
         // Value object configurations for Money and Discount
         modelBuilder.ApplyUtcDateTimeConverter();
+    }
+
+    private void SetAllLowercase(ModelBuilder modelBuilder)
+    {
+        // Configurar nomes de tabelas e colunas para lowercase
+        foreach (var entity in modelBuilder.Model.GetEntityTypes())
+        {
+            // Configurar o nome da tabela em lowercase
+            entity.SetTableName(entity.GetTableName()?.ToLower());
+
+            // Configurar os nomes das colunas em lowercase
+            foreach (var property in entity.GetProperties())
+            {
+                property.SetColumnName(property.GetColumnName()?.ToLower());
+            }
+
+            // Configurar os nomes das chaves em lowercase
+            foreach (var key in entity.GetKeys())
+            {
+                key.SetName(key.GetName()?.ToLower());
+            }
+
+            // Configurar os nomes dos índices em lowercase
+            foreach (var index in entity.GetIndexes())
+            {
+                index.SetDatabaseName(index.GetDatabaseName()?.ToLower());
+            }
+
+            // Configurar os nomes das chaves estrangeiras em lowercase
+            foreach (var foreignKey in entity.GetForeignKeys())
+            {
+                foreignKey.SetConstraintName(foreignKey.GetConstraintName()?.ToLower());
+            }
+        }
+    }
+
+    private void SeedBranchData(ModelBuilder modelBuilder)
+    {
+        // Seed data
+        modelBuilder.Entity<Branch>().HasData(
+            new Branch(1, "Main Branch", "123 Main St", "New York", "NY", "10001", "123-456-7890"),
+            new Branch(2, "Secondary Branch", "456 Elm St", "Los Angeles", "CA", "90001", "987-654-3210")
+        );
     }
 }
 

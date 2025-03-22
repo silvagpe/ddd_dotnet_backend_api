@@ -25,6 +25,12 @@ public class Branch : Entity, IAggregateRoot
         Phone = phone;
     }
 
+    public Branch(int id, string name, string address, string city, string state, string zipCode, string phone)
+    : this(name, address, city, state, zipCode, phone)
+    {
+        Id = id;
+    }
+
     public void UpdateDetails(string name, string address, string city, string state, string zipCode, string phone)
     {
         Name = name ?? throw new ArgumentNullException(nameof(name));

@@ -3,6 +3,7 @@ using System;
 using DeveloperStore.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DeveloperStore.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250322135133_InitialCreate")]
+    partial class InitialCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -65,28 +68,6 @@ namespace DeveloperStore.Infrastructure.Migrations
                         .HasName("pk_branches");
 
                     b.ToTable("branches");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Address = "123 Main St",
-                            City = "New York",
-                            Name = "Main Branch",
-                            Phone = "123-456-7890",
-                            State = "NY",
-                            ZipCode = "10001"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Address = "456 Elm St",
-                            City = "Los Angeles",
-                            Name = "Secondary Branch",
-                            Phone = "987-654-3210",
-                            State = "CA",
-                            ZipCode = "90001"
-                        });
                 });
 
             modelBuilder.Entity("DeveloperStore.Domain.Entities.Customer", b =>

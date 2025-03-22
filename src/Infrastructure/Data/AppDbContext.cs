@@ -23,24 +23,46 @@ public class AppDbContext : DbContext
         SetAllLowercase(modelBuilder);
 
         // Branch configuration
+        #region Branch configuration        
+
         modelBuilder.Entity<Branch>()
             .HasKey(b => b.Id);
+        modelBuilder.Entity<Branch>()
+            .Property(b => b.Id)
+            .ValueGeneratedNever();
 
         SeedBranchData(modelBuilder);
 
-        // Customer configuration
+        #endregion
+
+        #region Customer configuration
+        
         modelBuilder.Entity<Customer>()
             .HasKey(c => c.Id);
+        modelBuilder.Entity<Customer>()
+            .Property(c => c.Id)
+            .ValueGeneratedNever();
+        
+        #endregion
 
-        // Product configuration
+
+        #region Product configuration
         modelBuilder.Entity<Product>()
             .HasKey(p => p.Id);
         modelBuilder.Entity<Product>()
+            .Property(p => p.Id)
+            .ValueGeneratedNever();
+        modelBuilder.Entity<Product>()
             .OwnsOne(p => p.Price);
 
-        // Sale configuration
+        #endregion
+
+        #region  Sale configuration
         modelBuilder.Entity<Sale>()
             .HasKey(s => s.Id);
+        modelBuilder.Entity<Sale>()
+            .Property(s => s.Id)
+            .ValueGeneratedNever();
         modelBuilder.Entity<Sale>()
             .HasOne(s => s.Customer)
             .WithMany(c => c.Sales)
@@ -52,9 +74,14 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<Sale>()
             .OwnsOne(s => s.TotalAmount);
 
-        // SaleItem configuration
+        #endregion
+        
+        #region  SaleItem configuration
         modelBuilder.Entity<SaleItem>()
             .HasKey(si => si.Id);
+        modelBuilder.Entity<SaleItem>()
+            .Property(si => si.Id)
+            .ValueGeneratedNever(); 
         modelBuilder.Entity<SaleItem>()
             .HasOne(si => si.Sale)
             .WithMany(s => s.Items)
@@ -69,6 +96,8 @@ public class AppDbContext : DbContext
             .OwnsOne(si => si.Discount);
         modelBuilder.Entity<SaleItem>()
             .OwnsOne(si => si.TotalPrice);
+
+        #endregion
 
         // Value object configurations for Money and Discount
         modelBuilder.ApplyUtcDateTimeConverter();

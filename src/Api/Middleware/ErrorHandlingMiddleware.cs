@@ -23,7 +23,14 @@ public class ErrorHandlingMiddleware
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "An error occurred while processing the request.");
+            if (ex is ResourceNotFoundException || ex is AuthenticationException || ex is ValidationException)
+            {
+                _logger.LogWarning(ex, "An error occurred while processing the request.");
+            }
+            else
+            {
+                _logger.LogError(ex, "An error occurred while processing the request.");
+            }            
             await HandleExceptionAsync(context, ex);
         }
     }

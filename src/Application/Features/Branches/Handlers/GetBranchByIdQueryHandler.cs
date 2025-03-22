@@ -2,25 +2,24 @@ using AutoMapper;
 using DeveloperStore.Application.Dtos;
 using DeveloperStore.Application.Queries;
 using DeveloperStore.Domain.Repositories;
+using MediatR;
 
 namespace DeveloperStore.Application.Handlers;
 
-public class GetBranchByIdQueryHandler
+public class GetBranchByIdQueryHandler : IRequestHandler<GetBranchByIdQuery, BranchDto?>
 {
     private readonly IBranchRepository _branchRepository;
     private readonly IMapper _mapper;
 
-    public GetBranchByIdQueryHandler(IBranchRepository branchRepository)
+    public GetBranchByIdQueryHandler(IBranchRepository branchRepository, IMapper mapper)
     {
         _branchRepository = branchRepository;
+        _mapper = mapper;
     }
 
-    public async Task<BranchDto?> HandleAsync(GetBranchByIdQuery query)
+    public async Task<BranchDto?> Handle(GetBranchByIdQuery request, CancellationToken cancellationToken)
     {
-        var branch = await _branchRepository.GetByIdAsync(query.BranchId);
-        if (branch is null)
-            return null;
-
-        return _mapper.Map<BranchDto>(branch);
+        var branch = await _branchRepository.GetByIdAsync(request.BranchId);
+        return branch is null ? null : _mapper.Map<BranchDto>(branch);
     }
 }

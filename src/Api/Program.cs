@@ -1,6 +1,7 @@
 using DeveloperStore.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using DeveloperStore.Api.DependencyInjections;
+using DeveloperStore.Api.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +14,7 @@ builder.Services.AddRepositoryInjection();
 builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddMediatR();
 
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -22,7 +24,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseMiddleware<ErrorHandlingMiddleware>();
 
+app.MapControllers();
 
 app.Run();
 

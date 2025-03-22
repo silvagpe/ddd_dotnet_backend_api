@@ -1,5 +1,6 @@
 using DeveloperStore.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
+using DeveloperStore.Api.DependencyInjections;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,11 +8,11 @@ var builder = WebApplication.CreateBuilder(args);
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
+builder.Services.AddDbContextInjection(builder.Configuration);
+builder.Services.AddRepositoryInjection();
+builder.Services.AddAutoMapper(typeof(Program));
+builder.Services.AddMediatR();
 
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(connectionString)); // Use o provedor correspondente ao seu banco
-
-    
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

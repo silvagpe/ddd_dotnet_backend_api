@@ -1,15 +1,16 @@
 // filepath: d:\projetos\github\ntt_test\src\Infrastructure\Repositories\BranchRepository.cs
 using DeveloperStore.Domain.Entities;
 using DeveloperStore.Domain.Repositories;
+using DeveloperStore.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace DeveloperStore.Infrastructure.Repositories;
 
 public class BranchRepository : IBranchRepository
 {
-    private readonly DbContext _context;
+    private readonly AppDbContext _context;
 
-    public BranchRepository(DbContext context)
+    public BranchRepository(AppDbContext context)
     {
         _context = context;
     }

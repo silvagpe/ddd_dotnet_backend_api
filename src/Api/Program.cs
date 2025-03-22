@@ -8,12 +8,11 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
-
+builder.Services.AddControllers();
 builder.Services.AddDbContextInjection(builder.Configuration);
 builder.Services.AddRepositoryInjection();
-builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddMediatR();
-
+builder.Services.AddAutoMapperConfig();
 
 var app = builder.Build();
 

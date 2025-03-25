@@ -7,7 +7,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+// builder.Services.AddOpenApi();
+builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
 builder.Services.AddDbContextInjection(builder.Configuration);
 builder.Services.AddRepositoryInjection();
@@ -19,7 +20,9 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
+    // app.MapOpenApi();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();
@@ -27,9 +30,11 @@ app.UseMiddleware<ErrorHandlingMiddleware>();
 
 app.MapControllers();
 
-app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
+//Automatic apply migrations.
+using (var scope = app.Services.CreateScope())
 {
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>(); // Substitua pelo nome do seu DbContext
+    dbContext.Database.Migrate();
 }
+
+app.Run();

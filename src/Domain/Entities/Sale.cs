@@ -18,11 +18,11 @@ public class Sale : Entity, IAggregateRoot
     public DateTime SaleDate { get; private set; }
 
     // External Identity pattern with denormalized details
-    public int CustomerId { get; private set; }
-    public Customer Customer { get; private set; }    
+    public long CustomerId { get; private set; }
+    public Customer Customer { get; private set; }
 
-    public int BranchId { get; private set; }
-    public Branch Branch { get; private set; }    
+    public long BranchId { get; private set; }
+    public Branch Branch { get; private set; }
 
     public SaleStatus Status { get; private set; }
     public Money TotalAmount { get; private set; }
@@ -33,18 +33,18 @@ public class Sale : Entity, IAggregateRoot
     private readonly List<IDomainEvent> _domainEvents = new List<IDomainEvent>();
     public IReadOnlyCollection<IDomainEvent> DomainEvents => _domainEvents.AsReadOnly();
 
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
     private Sale() { }  // For EF Core
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
 
-    public Sale(
-        Customer customer,
-        Branch branch,
-        DateTime saleDate)
+    public Sale(long id, Customer customer, Branch branch, DateTime saleDate)
     {
+        Id = id;
         SaleNumber = GenerateSaleNumber();
         SaleDate = saleDate;
         Customer = customer ?? throw new ArgumentNullException(nameof(customer));
         CustomerId = customer.Id;
-        Branch = branch ?? throw new ArgumentNullException(nameof(branch));        
+        Branch = branch ?? throw new ArgumentNullException(nameof(branch));
         BranchId = branch.Id;
         Status = SaleStatus.Created;
         TotalAmount = Money.Zero();
@@ -52,25 +52,26 @@ public class Sale : Entity, IAggregateRoot
         _domainEvents.Add(new SaleCreatedEvent(this));
     }
 
-    public void AddItem(Product product, int quantity, Money unitPrice)
+
+    public void AddItem(long itemId, Product product, int quantity, Money unitPrice)
     {
-        if (product == null)
+        if (product is null)
             throw new ArgumentNullException(nameof(product));
 
         if (_items.Any(i => i.ProductId == product.Id))
             throw new BusinessRuleException($"Product {product.Name} is already in the sale. Update the quantity instead.");
 
-        var saleItem = new SaleItem(product, quantity, unitPrice);
+        var saleItem = new SaleItem(itemId, product, quantity, unitPrice);
         _items.Add(saleItem);
 
         RecalculateTotalAmount();
         _domainEvents.Add(new SaleModifiedEvent(this));
     }
 
-    public void UpdateItemQuantity(int productId, int quantity)
+    public void UpdateItemQuantity(long productId, int quantity)
     {
         var item = _items.FirstOrDefault(i => i.Id == productId);
-        if (item == null)
+        if (item is null)
             throw new BusinessRuleException($"Product with ID {productId} not found in this sale");
 
         item.UpdateQuantity(quantity);
@@ -78,10 +79,10 @@ public class Sale : Entity, IAggregateRoot
         _domainEvents.Add(new SaleModifiedEvent(this));
     }
 
-    public void RemoveItem(int productId)
+    public void RemoveItem(long productId)
     {
         var item = _items.FirstOrDefault(i => i.ProductId == productId);
-        if (item == null)
+        if (item is null)
             throw new BusinessRuleException($"Product with ID {productId} not found in this sale");
 
         _items.Remove(item);

@@ -7,10 +7,8 @@ namespace DeveloperStore.Domain.Entities;
 public class SaleItem : Entity
 {
     // External Identity pattern with denormalized product details
-    public int ProductId { get; private set; }
+    public long ProductId { get; private set; }
     public Product Product { get; private set; }
-    public string ProductName { get; private set; }
-    public string ProductCategory { get; private set; }
 
     public int Quantity { get; private set; }
     public Money UnitPrice { get; private set; }
@@ -18,13 +16,16 @@ public class SaleItem : Entity
     public Money TotalPrice { get; private set; }
 
     // Navigation property - EF Core
-    public int SaleId { get; private set; }
-    public Sale Sale { get; private set; }    
+    public long SaleId { get; private set; }
+    public Sale? Sale { get; private set; }
 
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
     private SaleItem() { }  // For EF Core
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
 
-    public SaleItem(Product product, int quantity, Money unitPrice)
+    public SaleItem(long id, Product product, int quantity, Money unitPrice)
     {
+        Id = id;
         if (quantity <= 0)
             throw new BusinessRuleException("Quantity must be greater than zero");
 

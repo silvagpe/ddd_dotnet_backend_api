@@ -1,3 +1,7 @@
+# Readme
+
+
+### Windows
 
 Crie a migration inicial: No terminal, navegue até o diretório do projeto Infrastructure e execute o comando para criar a migration:
 ```
@@ -6,5 +10,16 @@ dotnet ef migrations add InitialCreate --project .\Infrastructure.csproj  --star
 
 Aplique a migration para criar o banco: Após criar a migration, aplique-a para gerar o banco de dados:
 ```
-dotnet ef database update --project src/Infrastructure --startup-project src/Api
+dotnet ef database update --project .\Infrastructure.csproj --startup-project ..\Api\Api.csproj
+```
+
+
+## Linuxs
+
+```
+ dotnet ef migrations add InitialCreate --project Infrastructure.csproj  --startup-project ../Api/Api.csproj
+```
+
+```
+dotnet ef database update --project Infrastructure.csproj --startup-project ../Api/Api.csproj
 ```

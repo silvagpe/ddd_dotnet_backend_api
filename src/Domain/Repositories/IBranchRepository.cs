@@ -4,10 +4,10 @@ namespace DeveloperStore.Domain.Repositories;
 
 public interface IBranchRepository
 {
-    Task<Branch> GetByIdAsync(int id);
+    Task<Branch?> GetByIdAsync(long id);
     Task<IEnumerable<Branch>> GetAllAsync(int page = 1, int pageSize = 10);
-    Task<int> GetTotalCountAsync();
+    Task<long> GetTotalCountAsync();
     Task<Branch> AddAsync(Branch branch);
     Task UpdateAsync(Branch branch);
-    Task DeleteAsync(int id);
+    Task<bool> DeleteAsync(long id);
 }

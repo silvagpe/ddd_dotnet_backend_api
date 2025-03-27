@@ -1,14 +1,22 @@
 using DeveloperStore.Domain.Entities;
+using SharpAbp.Abp.Snowflakes;
 using Xunit;
 
 namespace DeveloperStore.UnitTests.Domain.Entities;
 
 public class CustomerTests
 {
+    private readonly Snowflake _snowflakeIdGenerator;
+
+    public CustomerTests()
+    {
+        _snowflakeIdGenerator = new Snowflake(workerId: 1, datacenterId: 1);
+    }
+    
     [Fact]
     public void Constructor_ShouldInitializeProperties()
     {
-        var customer = new Customer("FirstName", "LastName", "email@example.com", "123456789");
+        var customer = new Customer(_snowflakeIdGenerator.NextId(), "FirstName", "LastName", "email@example.com", "123456789");
 
         Assert.Equal("FirstName", customer.FirstName);
         Assert.Equal("LastName", customer.LastName);
@@ -20,7 +28,7 @@ public class CustomerTests
     [Fact]
     public void UpdateDetails_ShouldUpdateProperties()
     {
-        var customer = new Customer("FirstName", "LastName", "email@example.com", "123456789");
+        var customer = new Customer(_snowflakeIdGenerator.NextId(), "FirstName", "LastName", "email@example.com", "123456789");
 
         customer.UpdateDetails("NewFirstName", "NewLastName", "newemail@example.com", "987654321");
 

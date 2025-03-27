@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DeveloperStore.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250322014543_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20250322183330_NeverGenerateId")]
+    partial class NeverGenerateId
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,183 +27,214 @@ namespace DeveloperStore.Infrastructure.Migrations
 
             modelBuilder.Entity("DeveloperStore.Domain.Entities.Branch", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    b.Property<long>("Id")
+                        .HasColumnType("bigint")
+                        .HasColumnName("id");
 
                     b.Property<string>("Address")
-                        .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("address");
 
                     b.Property<string>("City")
-                        .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("city");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("name");
 
                     b.Property<string>("Phone")
-                        .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("phone");
 
                     b.Property<string>("State")
-                        .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("state");
 
                     b.Property<string>("ZipCode")
-                        .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("zipcode");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_branches");
 
-                    b.ToTable("Branches");
+                    b.ToTable("branches");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1L,
+                            Address = "123 Main St",
+                            City = "New York",
+                            Name = "Main Branch",
+                            Phone = "123-456-7890",
+                            State = "NY",
+                            ZipCode = "10001"
+                        },
+                        new
+                        {
+                            Id = 2L,
+                            Address = "456 Elm St",
+                            City = "Los Angeles",
+                            Name = "Secondary Branch",
+                            Phone = "987-654-3210",
+                            State = "CA",
+                            ZipCode = "90001"
+                        });
                 });
 
             modelBuilder.Entity("DeveloperStore.Domain.Entities.Customer", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    b.Property<long>("Id")
+                        .HasColumnType("bigint")
+                        .HasColumnName("id");
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("email");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("firstname");
 
                     b.Property<string>("LastName")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("lastname");
 
                     b.Property<string>("Phone")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("phone");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_customers");
 
-                    b.ToTable("Customers");
+                    b.ToTable("customers");
                 });
 
             modelBuilder.Entity("DeveloperStore.Domain.Entities.Product", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    b.Property<long>("Id")
+                        .HasColumnType("bigint")
+                        .HasColumnName("id");
 
                     b.Property<string>("Category")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("category");
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("description");
 
                     b.Property<string>("ImageUrl")
-                        .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("imageurl");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("name");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_products");
 
-                    b.ToTable("Products");
+                    b.ToTable("products");
                 });
 
             modelBuilder.Entity("DeveloperStore.Domain.Entities.Sale", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                    b.Property<long>("Id")
+                        .HasColumnType("bigint")
+                        .HasColumnName("id");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    b.Property<long>("BranchId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("branchid");
 
-                    b.Property<int>("BranchId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("CustomerId")
-                        .HasColumnType("integer");
+                    b.Property<long>("CustomerId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("customerid");
 
                     b.Property<DateTime>("SaleDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("saledate");
 
                     b.Property<string>("SaleNumber")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("salenumber");
 
                     b.Property<int>("Status")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("status");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_sales");
 
-                    b.HasIndex("BranchId");
+                    b.HasIndex("BranchId")
+                        .HasDatabaseName("ix_sales_branchid");
 
-                    b.HasIndex("CustomerId");
+                    b.HasIndex("CustomerId")
+                        .HasDatabaseName("ix_sales_customerid");
 
-                    b.ToTable("Sales");
+                    b.ToTable("sales");
                 });
 
             modelBuilder.Entity("DeveloperStore.Domain.Entities.SaleItem", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                    b.Property<long>("Id")
+                        .HasColumnType("bigint")
+                        .HasColumnName("id");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("ProductCategory")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int>("ProductId")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("ProductName")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<long>("ProductId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("productid");
 
                     b.Property<int>("Quantity")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("quantity");
 
-                    b.Property<int>("SaleId")
-                        .HasColumnType("integer");
+                    b.Property<long>("SaleId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("saleid");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_saleitems");
 
-                    b.HasIndex("ProductId");
+                    b.HasIndex("ProductId")
+                        .HasDatabaseName("ix_saleitems_productid");
 
-                    b.HasIndex("SaleId");
+                    b.HasIndex("SaleId")
+                        .HasDatabaseName("ix_saleitems_saleid");
 
-                    b.ToTable("SaleItems");
+                    b.ToTable("saleitems");
                 });
 
             modelBuilder.Entity("DeveloperStore.Domain.Entities.Product", b =>
                 {
                     b.OwnsOne("DeveloperStore.Domain.ValueObjects.Money", "Price", b1 =>
                         {
-                            b1.Property<int>("ProductId")
-                                .HasColumnType("integer");
+                            b1.Property<long>("ProductId")
+                                .HasColumnType("bigint");
 
                             b1.Property<string>("Currency")
                                 .IsRequired()
-                                .HasColumnType("text");
+                                .HasColumnType("text")
+                                .HasColumnName("currency");
 
                             b1.Property<decimal>("Value")
-                                .HasColumnType("numeric");
+                                .HasColumnType("numeric")
+                                .HasColumnName("value");
 
                             b1.HasKey("ProductId");
 
-                            b1.ToTable("Products");
+                            b1.ToTable("money");
 
                             b1.WithOwner()
                                 .HasForeignKey("ProductId");
@@ -219,18 +250,20 @@ namespace DeveloperStore.Infrastructure.Migrations
                         .WithMany("Sales")
                         .HasForeignKey("BranchId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk_sales_branches_branchid");
 
                     b.HasOne("DeveloperStore.Domain.Entities.Customer", "Customer")
                         .WithMany("Sales")
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk_sales_customers_customerid");
 
                     b.OwnsOne("DeveloperStore.Domain.ValueObjects.Money", "TotalAmount", b1 =>
                         {
-                            b1.Property<int>("SaleId")
-                                .HasColumnType("integer");
+                            b1.Property<long>("SaleId")
+                                .HasColumnType("bigint");
 
                             b1.Property<string>("Currency")
                                 .IsRequired()
@@ -241,7 +274,7 @@ namespace DeveloperStore.Infrastructure.Migrations
 
                             b1.HasKey("SaleId");
 
-                            b1.ToTable("Sales");
+                            b1.ToTable("sales");
 
                             b1.WithOwner()
                                 .HasForeignKey("SaleId");
@@ -261,18 +294,20 @@ namespace DeveloperStore.Infrastructure.Migrations
                         .WithMany()
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk_saleitems_products_productid");
 
                     b.HasOne("DeveloperStore.Domain.Entities.Sale", "Sale")
                         .WithMany("Items")
                         .HasForeignKey("SaleId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk_saleitems_sales_saleid");
 
                     b.OwnsOne("DeveloperStore.Domain.ValueObjects.Money", "TotalPrice", b1 =>
                         {
-                            b1.Property<int>("SaleItemId")
-                                .HasColumnType("integer");
+                            b1.Property<long>("SaleItemId")
+                                .HasColumnType("bigint");
 
                             b1.Property<string>("Currency")
                                 .IsRequired()
@@ -283,7 +318,7 @@ namespace DeveloperStore.Infrastructure.Migrations
 
                             b1.HasKey("SaleItemId");
 
-                            b1.ToTable("SaleItems");
+                            b1.ToTable("saleitems");
 
                             b1.WithOwner()
                                 .HasForeignKey("SaleItemId");
@@ -291,8 +326,8 @@ namespace DeveloperStore.Infrastructure.Migrations
 
                     b.OwnsOne("DeveloperStore.Domain.ValueObjects.Money", "UnitPrice", b1 =>
                         {
-                            b1.Property<int>("SaleItemId")
-                                .HasColumnType("integer");
+                            b1.Property<long>("SaleItemId")
+                                .HasColumnType("bigint");
 
                             b1.Property<string>("Currency")
                                 .IsRequired()
@@ -303,7 +338,7 @@ namespace DeveloperStore.Infrastructure.Migrations
 
                             b1.HasKey("SaleItemId");
 
-                            b1.ToTable("SaleItems");
+                            b1.ToTable("saleitems");
 
                             b1.WithOwner()
                                 .HasForeignKey("SaleItemId");
@@ -311,15 +346,16 @@ namespace DeveloperStore.Infrastructure.Migrations
 
                     b.OwnsOne("DeveloperStore.Domain.ValueObjects.Discount", "Discount", b1 =>
                         {
-                            b1.Property<int>("SaleItemId")
-                                .HasColumnType("integer");
+                            b1.Property<long>("SaleItemId")
+                                .HasColumnType("bigint");
 
                             b1.Property<decimal>("Percentage")
-                                .HasColumnType("numeric");
+                                .HasColumnType("numeric")
+                                .HasColumnName("percentage");
 
                             b1.HasKey("SaleItemId");
 
-                            b1.ToTable("SaleItems");
+                            b1.ToTable("discount");
 
                             b1.WithOwner()
                                 .HasForeignKey("SaleItemId");

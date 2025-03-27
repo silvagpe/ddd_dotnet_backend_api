@@ -20,23 +20,49 @@ public class AppDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
+        SetAllLowercase(modelBuilder);
+
         // Branch configuration
+        #region Branch configuration        
+
         modelBuilder.Entity<Branch>()
             .HasKey(b => b.Id);
+        modelBuilder.Entity<Branch>()
+            .Property(b => b.Id)
+            .ValueGeneratedNever();
 
-        // Customer configuration
+        SeedBranchData(modelBuilder);
+
+        #endregion
+
+        #region Customer configuration
+        
         modelBuilder.Entity<Customer>()
             .HasKey(c => c.Id);
+        modelBuilder.Entity<Customer>()
+            .Property(c => c.Id)
+            .ValueGeneratedNever();
+        
+        #endregion
 
-        // Product configuration
+
+        #region Product configuration
         modelBuilder.Entity<Product>()
             .HasKey(p => p.Id);
         modelBuilder.Entity<Product>()
+            .Property(p => p.Id)
+            .ValueGeneratedNever();
+        modelBuilder.Entity<Product>()
             .OwnsOne(p => p.Price);
 
-        // Sale configuration
+        #endregion
+
+        #region  Sale configuration
         modelBuilder.Entity<Sale>()
             .HasKey(s => s.Id);
+        modelBuilder.Entity<Sale>()
+            .Property(s => s.Id)
+            .ValueGeneratedNever();
         modelBuilder.Entity<Sale>()
             .HasOne(s => s.Customer)
             .WithMany(c => c.Sales)
@@ -48,9 +74,14 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<Sale>()
             .OwnsOne(s => s.TotalAmount);
 
-        // SaleItem configuration
+        #endregion
+        
+        #region  SaleItem configuration
         modelBuilder.Entity<SaleItem>()
             .HasKey(si => si.Id);
+        modelBuilder.Entity<SaleItem>()
+            .Property(si => si.Id)
+            .ValueGeneratedNever(); 
         modelBuilder.Entity<SaleItem>()
             .HasOne(si => si.Sale)
             .WithMany(s => s.Items)
@@ -66,8 +97,53 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<SaleItem>()
             .OwnsOne(si => si.TotalPrice);
 
+        #endregion
+
         // Value object configurations for Money and Discount
         modelBuilder.ApplyUtcDateTimeConverter();
+    }
+
+    private void SetAllLowercase(ModelBuilder modelBuilder)
+    {
+        // Configurar nomes de tabelas e colunas para lowercase
+        foreach (var entity in modelBuilder.Model.GetEntityTypes())
+        {
+            // Configurar o nome da tabela em lowercase
+            entity.SetTableName(entity.GetTableName()?.ToLower());
+
+            // Configurar os nomes das colunas em lowercase
+            foreach (var property in entity.GetProperties())
+            {
+                property.SetColumnName(property.GetColumnName()?.ToLower());
+            }
+
+            // Configurar os nomes das chaves em lowercase
+            foreach (var key in entity.GetKeys())
+            {
+                key.SetName(key.GetName()?.ToLower());
+            }
+
+            // Configurar os nomes dos índices em lowercase
+            foreach (var index in entity.GetIndexes())
+            {
+                index.SetDatabaseName(index.GetDatabaseName()?.ToLower());
+            }
+
+            // Configurar os nomes das chaves estrangeiras em lowercase
+            foreach (var foreignKey in entity.GetForeignKeys())
+            {
+                foreignKey.SetConstraintName(foreignKey.GetConstraintName()?.ToLower());
+            }
+        }
+    }
+
+    private void SeedBranchData(ModelBuilder modelBuilder)
+    {
+        // Seed data
+        modelBuilder.Entity<Branch>().HasData(
+            new Branch(1, "Main Branch", "123 Main St", "New York", "NY", "10001", "123-456-7890"),
+            new Branch(2, "Secondary Branch", "456 Elm St", "Los Angeles", "CA", "90001", "987-654-3210")
+        );
     }
 }
 

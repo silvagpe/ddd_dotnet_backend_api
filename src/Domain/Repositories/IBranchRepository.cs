@@ -5,7 +5,7 @@ namespace DeveloperStore.Domain.Repositories;
 public interface IBranchRepository
 {
     Task<Branch?> GetByIdAsync(long id);
-    Task<(IEnumerable<Branch> branches, long totalCount)> GetAllAsync(int page = 1, int pageSize = 10);
+    Task<IEnumerable<Branch>> GetAllAsync(int page = 1, int pageSize = 10);
     Task<long> GetTotalCountAsync();
     Task<Branch> AddAsync(Branch branch);
     Task UpdateAsync(Branch branch);

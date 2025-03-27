@@ -20,18 +20,12 @@ public class BranchRepository : IBranchRepository
         return await _context.Set<Branch>().FindAsync(id);
     }
 
-    public async Task<(IEnumerable<Branch> branches, long totalCount)> GetAllAsync(int page = 1, int pageSize = 10)
+    public async Task<IEnumerable<Branch>> GetAllAsync(int page = 1, int pageSize = 10)
     {        
-        var branches = _context.Set<Branch>()
+        return await _context.Set<Branch>()
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
             .ToListAsync();
-
-        var totalCount = _context.Set<Branch>().LongCountAsync();
-
-        await Task.WhenAll(branches, totalCount);
-
-        return new(branches.Result, totalCount.Result);
     }
 
     public async Task<long> GetTotalCountAsync()

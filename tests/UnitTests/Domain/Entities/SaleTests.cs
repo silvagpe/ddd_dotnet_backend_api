@@ -73,7 +73,7 @@ public class SaleTest
         // Act & Assert
         Action act = () => sale.AddItem(_snowflakeIdGenerator.NextId(), _product1, 2, Money.FromDecimal(10.00m));
         act.Should().Throw<BusinessRuleException>()
-           .WithMessage($"Product {_product1.Name} is already in the sale. Update the quantity instead.");
+           .WithMessage($"Product {_product1.Title} is already in the sale. Update the quantity instead.");
     }
 
     [Fact]

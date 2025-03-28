@@ -59,7 +59,7 @@ public class Sale : Entity, IAggregateRoot
             throw new ArgumentNullException(nameof(product));
 
         if (_items.Any(i => i.ProductId == product.Id))
-            throw new BusinessRuleException($"Product {product.Name} is already in the sale. Update the quantity instead.");
+            throw new BusinessRuleException($"Product {product.Title} is already in the sale. Update the quantity instead.");
 
         var saleItem = new SaleItem(itemId, product, quantity, unitPrice);
         _items.Add(saleItem);

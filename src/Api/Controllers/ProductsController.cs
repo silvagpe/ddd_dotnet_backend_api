@@ -7,6 +7,7 @@ using MediatR;
 using DeveloperStore.Api.Middleware;
 using DeveloperStore.Application.Features.Branches.Queries;
 using DeveloperStore.Api.Extensions;
+using DeveloperStore.Application.Features.Products.Commands;
 
 [ApiController]
 [Route("api/[controller]")]
@@ -60,9 +61,10 @@ public class ProductsController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> PostProductAsync(long productId)
+    public async Task<IActionResult> PostProductAsync(CreateProductCommand command)
     {
-        return Ok();
+        var result = await _mediator.Send(command);
+        return Ok(result);
     }
 
     [HttpPut("{productId:long}")]

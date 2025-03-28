@@ -3,6 +3,7 @@ using DeveloperStore.Application.Features.Products.Commands;
 using DeveloperStore.Application.Features.Products.Dtos;
 using DeveloperStore.Domain.Entities;
 using DeveloperStore.Domain.Repositories;
+using DeveloperStore.Domain.ValueObjects;
 using MediatR;
 using SharpAbp.Abp.Snowflakes;
 
@@ -23,8 +24,20 @@ public class CreateProductHandler : IRequestHandler<CreateProductCommand, Produc
 
     public async Task<ProductDto?> Handle(CreateProductCommand request, CancellationToken cancellationToken)
     {
-        request.Id = _snowflake.NextId();
-        var product = _mapper.Map<CreateProductCommand, Product>(request);        
+        // request.Id = _snowflake.NextId();
+
+        // var product =  _mapper.Map<CreateProductCommand, Product>(request);        
+        var product = new Product(
+            _snowflake.NextId(),
+            request.Title,
+            request.Description,
+            Money.FromDecimal(request.Price),
+            request.Category,
+            _mapper.Map<RatingDto, Rating>(request.Rating),
+            request.Image
+        );
+
+
         product =  await _productRepository.AddAsync(product, cancellationToken);
 
         if (product is null)

@@ -14,7 +14,8 @@ public class ProductMappingProfile : Profile
         CreateMap<Rating, RatingDto>();
 
         CreateMap<CreateProductCommand, Product>()            
-            .ForMember(dest => dest.Rating, opt => opt.MapFrom(src => src.Rating));
+            .ForMember(dest => dest.Rating, opt => opt.MapFrom(src => src.Rating))
+            .ForMember(dest => dest.Price, opt => opt.MapFrom(src => Money.FromDecimal(src.Price, "USD")));
             
         CreateMap<RatingDto, Rating>();
     }

@@ -55,6 +55,15 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<Product>()
             .OwnsOne(p => p.Price);
 
+        modelBuilder.Entity<Product>(builder =>
+        {
+            builder.OwnsOne(e => e.Rating, rating =>
+            {
+                rating.Property(r => r.Rate).IsRequired();
+                rating.Property(r => r.Count).IsRequired();
+            });
+        });
+
         #endregion
 
         #region  Sale configuration

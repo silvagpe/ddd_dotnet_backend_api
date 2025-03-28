@@ -15,44 +15,53 @@ public class BranchRepository : IBranchRepository
         _context = context;
     }
 
-    public async Task<Branch?> GetByIdAsync(long id)
+    public async Task<Branch?> GetByIdAsync(long id, CancellationToken cancellationToken)
     {
-        return await _context.Set<Branch>().FindAsync(id);
+        return await _context.Branches
+            .AsNoTracking()
+            .FirstOrDefaultAsync(p => p.Id == id, cancellationToken);
     }
 
-    public async Task<IEnumerable<Branch>> GetAllAsync(int page = 1, int pageSize = 10)
+    public async Task<IEnumerable<Branch>> GetAllAsync(CancellationToken cancellationToken, int page = 1, int pageSize = 10)
     {        
-        return await _context.Set<Branch>()
+        return await _context.Branches
+            .AsNoTracking()
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
             .ToListAsync();
     }
 
-    public async Task<long> GetTotalCountAsync()
+    public async Task<long> GetTotalCountAsync(CancellationToken cancellationToken)
     {
-        return await _context.Set<Branch>().LongCountAsync();
+        return await _context.Branches.LongCountAsync();
     }
 
-    public async Task<Branch> AddAsync(Branch branch)
+    public async Task<Branch?> AddAsync(Branch branch, CancellationToken cancellationToken)
     {
-        await _context.Set<Branch>().AddAsync(branch);
-        await _context.SaveChangesAsync();
-        return branch;
+        await _context.Branches.AddAsync(branch, cancellationToken);
+        return await _context.SaveChangesAsync(cancellationToken) > 0  ? branch : null;
+    }    
+
+    public async Task<Branch?> UpdateAsync(Branch branch, CancellationToken cancellationToken)
+    {
+        var existingBranch = await _context.Branches.FindAsync([branch.Id], cancellationToken);
+        if (existingBranch is null)
+        {
+            return null;
+        }
+        _context.Entry(existingBranch).CurrentValues.SetValues(branch);
+        return await _context.SaveChangesAsync(cancellationToken) > 0 ? branch : null;
     }
 
-    public async Task UpdateAsync(Branch branch)
+    public async Task<bool> DeleteAsync(long id, CancellationToken cancellationToken)
     {
-        _context.Set<Branch>().Update(branch);
-        await _context.SaveChangesAsync();
-    }
+        var branch = await _context.Branches.FindAsync([id], cancellationToken);
+        if (branch is not null)
+        {
+            _context.Branches.Remove(branch);            
+            return await _context.SaveChangesAsync(cancellationToken) > 0;
+        }
 
-    public async Task<bool> DeleteAsync(long id)
-    {
-        var branch = await GetByIdAsync(id);
-        if (branch is null)
-            return false;
-
-        _context.Set<Branch>().Remove(branch);
-        return await _context.SaveChangesAsync() > 0;
+        return false;
     }
 }

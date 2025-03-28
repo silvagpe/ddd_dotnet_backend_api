@@ -19,7 +19,7 @@ public class GetBranchByIdQueryHandler : IRequestHandler<GetBranchByIdQuery, Bra
 
     public async Task<BranchDto?> Handle(GetBranchByIdQuery request, CancellationToken cancellationToken)
     {
-        var branch = await _branchRepository.GetByIdAsync(request.BranchId);
+        var branch = await _branchRepository.GetByIdAsync(request.BranchId, cancellationToken);
         return branch is null ? null : _mapper.Map<BranchDto>(branch);
     }
 }

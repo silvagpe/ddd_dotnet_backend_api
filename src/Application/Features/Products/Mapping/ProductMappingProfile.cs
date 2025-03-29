@@ -10,12 +10,30 @@ public class ProductMappingProfile : Profile
 {
     public ProductMappingProfile()
     {
-        CreateMap<Product, ProductDto>();
+        CreateMap<Product, ProductDto>()
+            .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.Price.Value))
+            .ForMember(dest => dest.Image, opt => opt.MapFrom(src => src.ImageUrl));
+
         CreateMap<Rating, RatingDto>();
 
-        CreateMap<CreateProductCommand, Product>()            
+        CreateMap<decimal, Money>()
+            .ConvertUsing(src => new Money(src, "USD"));
+
+        CreateMap<Money, decimal>()
+            .ConvertUsing(src => src.Value); 
+
+        CreateMap<CreateProductCommand, Product>()     
             .ForMember(dest => dest.Rating, opt => opt.MapFrom(src => src.Rating))
-            .ForMember(dest => dest.Price, opt => opt.MapFrom(src => Money.FromDecimal(src.Price, "USD")));
+            .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.Price))
+            // .ForMember(dest => dest.ImageUrl, opt =>
+            // {
+            //     opt.MapFrom(src =>
+            //     {
+            //         Console.WriteLine($"Mapping Image: {src.Image}"); // Log para depuração
+            //         return src.Image;
+            //     });
+            // });
+            .ForMember(dest => dest.ImageUrl, opt => opt.MapFrom(src => src.Image));
             
         CreateMap<RatingDto, Rating>();
     }

@@ -16,7 +16,7 @@ public class Product : Entity
     private Product() { }  // For EF Core
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
 
-    public Product(long id, string title, string description, Money price, string category, Rating rating, string? imageUrl = null)
+    public Product(long id, string title, string description, Money price, string category, Rating rating, string? image = null)
     {
         Id = id;
         Title = title ?? throw new ArgumentNullException(nameof(title));
@@ -24,7 +24,7 @@ public class Product : Entity
         Price = price ?? throw new ArgumentNullException(nameof(price));
         Category = category ?? throw new ArgumentNullException(nameof(category));
         Rating = rating ?? throw new ArgumentNullException(nameof(rating));
-        ImageUrl = imageUrl;
+        ImageUrl = image;
     }
 
     public void UpdateDetails(string title, string description, Money price, string category, string? imageUrl = null)

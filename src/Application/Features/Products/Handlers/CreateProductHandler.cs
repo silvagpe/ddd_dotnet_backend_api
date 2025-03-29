@@ -24,19 +24,8 @@ public class CreateProductHandler : IRequestHandler<CreateProductCommand, Produc
 
     public async Task<ProductDto?> Handle(CreateProductCommand request, CancellationToken cancellationToken)
     {
-        // request.Id = _snowflake.NextId();
-
-        // var product =  _mapper.Map<CreateProductCommand, Product>(request);        
-        var product = new Product(
-            _snowflake.NextId(),
-            request.Title,
-            request.Description,
-            Money.FromDecimal(request.Price),
-            request.Category,
-            _mapper.Map<RatingDto, Rating>(request.Rating),
-            request.Image
-        );
-
+        request.Id = _snowflake.NextId();
+        var product =  _mapper.Map<CreateProductCommand, Product>(request);        
 
         product =  await _productRepository.AddAsync(product, cancellationToken);
 

@@ -13,7 +13,7 @@ public class CreateProductCommandValidator : AbstractValidator<CreateProductComm
             .MaximumLength(200).WithMessage("Title must not exceed 200 characters.");
 
         RuleFor(command => command.Description)
-            .NotEmpty().WithMessage("Title is required.")
+            .NotEmpty().WithMessage("Description is required.")
             .MaximumLength(1000).WithMessage("Description must not exceed 1000 characters.");
 
         RuleFor(command => command.Category)

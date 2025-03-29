@@ -1,11 +1,7 @@
 using AutoMapper;
 using DeveloperStore.Application.Features.Products.Commands;
-using DeveloperStore.Application.Features.Products.Dtos;
-using DeveloperStore.Domain.Entities;
 using DeveloperStore.Domain.Repositories;
-using DeveloperStore.Domain.ValueObjects;
 using MediatR;
-using SharpAbp.Abp.Snowflakes;
 
 namespace DeveloperStore.Application.Features.Products.Handlers;
 

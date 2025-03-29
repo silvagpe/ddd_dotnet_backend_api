@@ -22,12 +22,7 @@ public class ProductRepository : IProductRepository
 
     public async Task<Product?> UpdateAsync(Product product, CancellationToken cancellationToken)
     {
-        var existingItem = await _context.Products.FindAsync([product.Id], cancellationToken);
-        if (existingItem is null)
-        {
-            return null;
-        }
-        _context.Entry(existingItem).CurrentValues.SetValues(product);
+        _context.Products.Update(product);
         return await _context.SaveChangesAsync(cancellationToken) > 0 ? product : null;
     }
 

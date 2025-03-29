@@ -2,6 +2,7 @@ using System.Reflection;
 using DeveloperStore.Application;
 using DeveloperStore.Application.Features.Products.Commands;
 using DeveloperStore.Application.Features.Products.Dtos;
+using DeveloperStore.Application.Features.Products.Queries;
 using DeveloperStore.Application.Helpers;
 using FluentValidation;
 using MediatR;
@@ -16,6 +17,7 @@ public static class MediatRInjections
         services.AddTransient<IValidator<CreateProductCommand>, CreateProductCommandValidator>();
         services.AddTransient<IValidator<UpdateProductCommand>, UpdateProductCommandValidator>();
         services.AddTransient<IValidator<DeleteProductCommand>, DeleteProductCommandValidator>();
+        services.AddTransient<IValidator<GetProductsByCategoryQuery>, GetProductsByCategoryQueryValidator>();
         services.AddTransient<IValidator<RatingDto>, RatingDtoValidator>();
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));              
         return services;

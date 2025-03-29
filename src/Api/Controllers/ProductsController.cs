@@ -92,9 +92,20 @@ public class ProductsController : ControllerBase
     }
 
     [HttpGet("category/{category}")]
-    public async Task<IActionResult> GetProductsByCategoryAsync(string category)
+    public async Task<IActionResult> GetProductsByCategoryAsync([FromRoute]string category, [FromQuery] Dictionary<string, string>? filters = null)
     {        
-        var result = await _mediator.Send(new GetCategoriesQuery());
-        return Ok(result.Categories);
+        var filter = filters.ValidateFilters();
+        
+        if (!filter.IsPageValid())
+        {
+            return BadRequest(new
+            {
+                type = "ValidationError",
+                error = "Invalid pagination parameters",
+                detail = "Both _page and _pageSize must be greater than 0"
+            });
+        }
+        var result = await _mediator.Send(new GetProductsByCategoryQuery(category, filter.page, filter.pageSize, filter.order, filter.fields));                 
+        return Ok(result);
     }
 }

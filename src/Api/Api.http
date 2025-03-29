@@ -25,3 +25,7 @@ GET {{Api_HostAddress}}/api/Branches?name=*anch&_order="name desc"
 Accept: application/json
 ###
 
+## Get products by category
+GET {{Api_HostAddress}}/api/Products/category/men's clothing?title=f*&_order="title"
+Accept: application/json
+###

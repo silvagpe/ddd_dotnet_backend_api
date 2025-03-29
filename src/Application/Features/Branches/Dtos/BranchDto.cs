@@ -1,4 +1,4 @@
-namespace DeveloperStore.Application.Dtos;
+namespace DeveloperStore.Application.Features.Branches.Dtos;
 
 public class BranchDto
 {

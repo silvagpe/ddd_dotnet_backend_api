@@ -1,4 +1,4 @@
-using DeveloperStore.Application.Dtos;
+using DeveloperStore.Application.Features.Branches.Dtos;
 using DeveloperStore.Application.Models;
 using MediatR;
 

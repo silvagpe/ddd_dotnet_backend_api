@@ -1,5 +1,5 @@
 using AutoMapper;
-using DeveloperStore.Application.Dtos;
+using DeveloperStore.Application.Features.Branches.Dtos;
 using DeveloperStore.Application.Queries;
 using DeveloperStore.Domain.Repositories;
 using MediatR;

@@ -3,11 +3,11 @@ using DeveloperStore.Domain.Entities;
 using DeveloperStore.Application.Features.Branches.Queries;
 using MediatR;
 using DeveloperStore.Application.Models;
-using DeveloperStore.Application.Dtos;
 using AutoMapper;
 using DeveloperStore.Infrastructure.Data;
 using DeveloperStore.Application.Extensions;
 using Microsoft.EntityFrameworkCore;
+using DeveloperStore.Application.Features.Branches.Dtos;
 
 namespace DeveloperStore.Application.Features.Branches.Handlers;
 

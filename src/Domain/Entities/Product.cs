@@ -27,13 +27,13 @@ public class Product : Entity
         ImageUrl = image;
     }
 
-    public void UpdateDetails(string title, string description, Money price, string category, string? imageUrl = null)
+    public void UpdateDetails(string title, string description, Money price, string category, string? image = null)
     {
         Title = title ?? throw new ArgumentNullException(nameof(title));
         Description = description ?? throw new ArgumentNullException(nameof(description));
         Price = price ?? throw new ArgumentNullException(nameof(price));
         Category = category ?? throw new ArgumentNullException(nameof(category));
-        ImageUrl = imageUrl;
+        ImageUrl = image;
     }
 
     public void UpdateRating(Rating rating)

@@ -14,6 +14,8 @@ public static class MediatRInjections
     {
         services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(ApplicationAssemblyMarker).Assembly));  
         services.AddTransient<IValidator<CreateProductCommand>, CreateProductCommandValidator>();
+        services.AddTransient<IValidator<UpdateProductCommand>, UpdateProductCommandValidator>();
+        services.AddTransient<IValidator<DeleteProductCommand>, DeleteProductCommandValidator>();
         services.AddTransient<IValidator<RatingDto>, RatingDtoValidator>();
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));              
         return services;

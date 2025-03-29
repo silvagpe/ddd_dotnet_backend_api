@@ -68,15 +68,19 @@ public class ProductsController : ControllerBase
     }
 
     [HttpPut("{productId:long}")]
-    public async Task<IActionResult> PutProductAsync(long productId)
-    {
-        return Ok();
+    public async Task<IActionResult> PutProductAsync([FromRoute] long productId, [FromBody] UpdateProductCommand command)
+    {        
+        command.Id = productId;        
+        var result = await _mediator.Send(command);
+        return Ok(result);
     }
 
     [HttpDelete("{productId:long}")]
     public async Task<IActionResult> DeleteProductAsync(long productId)
     {
-        return Ok();
+        DeleteProductCommand command = new DeleteProductCommand(productId);
+        var result = await _mediator.Send(command);
+        return Ok(result);
     }
     
     [HttpGet("categories")]

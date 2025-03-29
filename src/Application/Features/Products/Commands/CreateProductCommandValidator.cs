@@ -17,7 +17,7 @@ public class CreateProductCommandValidator : AbstractValidator<CreateProductComm
             .MaximumLength(1000).WithMessage("Description must not exceed 1000 characters.");
 
         RuleFor(command => command.Category)
-            .NotEmpty().WithMessage("Start date is required.");
+            .NotEmpty().WithMessage("Category is required.");
 
         RuleFor(command => command.Price)
             .GreaterThan(0).WithMessage("Price must be greater than 0.");

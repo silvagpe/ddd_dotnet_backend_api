@@ -9,13 +9,13 @@ using DeveloperStore.Application.Features.Products.Dtos;
 
 namespace DeveloperStore.Application.Features.Products.Handlers;
 
-public class GetProducsByCategoryPagenatedHandler : IRequestHandler<GetProductsByCategoryQuery, PagedResult<ProductDto>>
+public class GetProductsByCategoryPagenatedHandler : IRequestHandler<GetProductsByCategoryQuery, PagedResult<ProductDto>>
 {
 
     private readonly AppDbContext _dbContext;
     private readonly IMapper _mapper;
 
-    public GetProducsByCategoryPagenatedHandler(IMapper mapper, AppDbContext dbContext)
+    public GetProductsByCategoryPagenatedHandler(IMapper mapper, AppDbContext dbContext)
     {
         _mapper = mapper;
         _dbContext = dbContext;

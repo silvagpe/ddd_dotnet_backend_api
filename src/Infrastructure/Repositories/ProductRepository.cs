@@ -63,4 +63,12 @@ public class ProductRepository : IProductRepository
         return await _context.Products.CountAsync(cancellationToken);
     }
 
+    public async Task<IEnumerable<string>> GetCategoriesAsync(CancellationToken cancellationToken)
+    {
+        return await _context.Products        
+            .AsNoTracking()
+            .Select(p => p.Category)
+            .Distinct()
+            .ToListAsync(cancellationToken);
+    }
 }

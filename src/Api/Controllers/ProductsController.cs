@@ -8,6 +8,7 @@ using DeveloperStore.Api.Middleware;
 using DeveloperStore.Application.Features.Branches.Queries;
 using DeveloperStore.Api.Extensions;
 using DeveloperStore.Application.Features.Products.Commands;
+using DeveloperStore.Application.Features.Products.Queries;
 
 [ApiController]
 [Route("api/[controller]")]
@@ -86,12 +87,14 @@ public class ProductsController : ControllerBase
     [HttpGet("categories")]
     public async Task<IActionResult> GetCategoriesAsync()
     {
-        return Ok();
+        var result = await _mediator.Send(new GetCategoriesQuery());
+        return Ok(result.Categories);
     }
 
     [HttpGet("category/{category}")]
     public async Task<IActionResult> GetProductsByCategoryAsync(string category)
-    {
-        return Ok();
+    {        
+        var result = await _mediator.Send(new GetCategoriesQuery());
+        return Ok(result.Categories);
     }
 }

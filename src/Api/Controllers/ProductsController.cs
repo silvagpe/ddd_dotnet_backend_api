@@ -80,7 +80,7 @@ public class ProductsController : ControllerBase
     {
         DeleteProductCommand command = new DeleteProductCommand(productId);
         var result = await _mediator.Send(command);
-        return Ok(result);
+        return Ok(new {messge = result});
     }
     
     [HttpGet("categories")]

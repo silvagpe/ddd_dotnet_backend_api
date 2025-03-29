@@ -4,6 +4,31 @@ namespace DeveloperStore.Application.Extensions;
 
 public static class QueryableExtensions
 {
+    public static IQueryable<T> ApplyFilters<T>(this IQueryable<T> query, IDictionary<string,string> fields)
+    {
+        foreach (var filter in fields)
+        {
+            var key = filter.Key.ToLower();
+            var value = filter.Value;
+
+            if (key.StartsWith("_min"))
+            {
+                var field = key.Substring(4); // Remove o prefixo "_min"
+                query = query.WhereDynamic(field, ">=", value);
+            }
+            else if (key.StartsWith("_max"))
+            {
+                var field = key.Substring(4); // Remove o prefixo "_max"
+                query = query.WhereDynamic(field, "<=", value);
+            }
+            else
+            {
+                query = query.WhereDynamic(key, "=", value);
+            }
+        }
+
+        return query;
+    }
     public static IQueryable<T> WhereDynamic<T>(this IQueryable<T> query, string field, string operation, string value)
     {
         var parameter = Expression.Parameter(typeof(T), "x");        

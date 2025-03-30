@@ -7,6 +7,10 @@ public class PagedResult<T>
     public int CurrentPage { get; set; }
     public int TotalPages { get; set; }
 
+    public PagedResult()
+    {
+    }
+
     public PagedResult(IEnumerable<T> data, long totalItems, int currentPage, int pageSize)
     {
         Data = data;

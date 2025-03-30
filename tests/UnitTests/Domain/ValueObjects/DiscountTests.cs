@@ -63,6 +63,7 @@ public class DiscountTests
         var result = discount.ToString();
 
         // Assert
-        Assert.Equal("15,00%", result);
+        decimal expected = 15.00m;
+        Assert.Equal($"{expected}%", result);
     }
 }

@@ -7,6 +7,9 @@ public static class RepositoryInjections
 {
     public static IServiceCollection AddRepositoryInjection(this IServiceCollection services)
     {
-        return services.AddScoped<IBranchRepository, BranchRepository>();
+        return services
+            .AddScoped<IBranchRepository, BranchRepository>()
+            .AddScoped<IProductRepository, ProductRepository>();
+        
     }
 }

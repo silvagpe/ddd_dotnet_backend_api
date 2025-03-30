@@ -2,6 +2,7 @@ using DeveloperStore.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using DeveloperStore.Api.DependencyInjections;
 using DeveloperStore.Api.Middleware;
+using SharpAbp.Abp.Snowflakes;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +15,7 @@ builder.Services.AddDbContextInjection(builder.Configuration);
 builder.Services.AddRepositoryInjection();
 builder.Services.AddMediatR();
 builder.Services.AddAutoMapperConfig();
+builder.Services.AddSnowflakeInjection();
 
 var app = builder.Build();
 

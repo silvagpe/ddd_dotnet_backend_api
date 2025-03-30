@@ -18,8 +18,15 @@ dotnet ef database update --project .\Infrastructure.csproj --startup-project ..
 
 ```
  dotnet ef migrations add InitialCreate --project Infrastructure.csproj  --startup-project ../Api/Api.csproj
+
+
+dotnet ef migrations list --project Infrastructure.csproj --startup-project ../Api/Api.csproj
+dotnet ef migrations remove 20250327225921_ProductRating --project Infrastructure.csproj  --startup-project ../Api/Api.csproj
 ```
 
 ```
 dotnet ef database update --project Infrastructure.csproj --startup-project ../Api/Api.csproj
+
+
+dotnet ef database update 20250327225921_ProductRating --project Infrastructure.csproj --startup-project ../Api/Api.csproj
 ```

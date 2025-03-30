@@ -1,10 +1,7 @@
 namespace DeveloperStore.Api.Controllers;
 
 using DeveloperStore.Application.Queries;
-using DeveloperStore.Application.Handlers;
-using DeveloperStore.Domain.Repositories;
 using Microsoft.AspNetCore.Mvc;
-using DeveloperStore.Application.Dtos;
 using MediatR;
 using DeveloperStore.Api.Middleware;
 using DeveloperStore.Application.Features.Branches.Queries;

@@ -133,10 +133,10 @@ namespace DeveloperStore.Infrastructure.Migrations
                         .HasColumnType("text")
                         .HasColumnName("imageurl");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("text")
-                        .HasColumnName("name");
+                        .HasColumnName("title");
 
                     b.HasKey("Id")
                         .HasName("pk_products");
@@ -237,7 +237,31 @@ namespace DeveloperStore.Infrastructure.Migrations
                                 .HasForeignKey("ProductId");
                         });
 
+                    b.OwnsOne("DeveloperStore.Domain.ValueObjects.Rating", "Rating", b1 =>
+                        {
+                            b1.Property<long>("ProductId")
+                                .HasColumnType("bigint");
+
+                            b1.Property<int>("Count")
+                                .HasColumnType("integer")
+                                .HasColumnName("count");
+
+                            b1.Property<double>("Rate")
+                                .HasColumnType("double precision")
+                                .HasColumnName("rate");
+
+                            b1.HasKey("ProductId");
+
+                            b1.ToTable("rating");
+
+                            b1.WithOwner()
+                                .HasForeignKey("ProductId");
+                        });
+
                     b.Navigation("Price")
+                        .IsRequired();
+
+                    b.Navigation("Rating")
                         .IsRequired();
                 });
 

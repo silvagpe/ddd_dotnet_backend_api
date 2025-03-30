@@ -19,9 +19,9 @@ public class ProductTests
     public void Constructor_ShouldInitializeProperties()
     {
         var price = new Money(100);
-        var product = new Product(_snowflakeIdGenerator.NextId(), "ProductName", "Description", price, "Category", "ImageUrl");
+        var product = new Product(_snowflakeIdGenerator.NextId(), "ProductName", "Description", price, "Category", new Rating(5,100), "ImageUrl");
 
-        Assert.Equal("ProductName", product.Name);
+        Assert.Equal("ProductName", product.Title);
         Assert.Equal("Description", product.Description);
         Assert.Equal(price, product.Price);
         Assert.Equal("Category", product.Category);
@@ -32,11 +32,11 @@ public class ProductTests
     public void UpdateDetails_ShouldUpdateProperties()
     {
         var price = new Money(100);
-        var product = new Product(_snowflakeIdGenerator.NextId(), "ProductName", "Description", price, "Category", "ImageUrl");
+        var product = new Product(_snowflakeIdGenerator.NextId(), "ProductName", "Description", price, "Category", new Rating(4.5,70),"ImageUrl");
 
         product.UpdateDetails("NewName", "NewDescription", new Money(200), "NewCategory", "NewImageUrl");
 
-        Assert.Equal("NewName", product.Name);
+        Assert.Equal("NewName", product.Title);
         Assert.Equal("NewDescription", product.Description);
         Assert.Equal(new Money(200), product.Price);
         Assert.Equal("NewCategory", product.Category);

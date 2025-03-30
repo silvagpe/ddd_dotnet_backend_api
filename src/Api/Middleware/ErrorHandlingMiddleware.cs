@@ -40,7 +40,7 @@ public class ErrorHandlingMiddleware
         var response = context.Response;
         response.ContentType = "application/json";
 
-        var errorResponse = exception switch
+        object errorResponse = exception switch
         {
             ResourceNotFoundException ex => new
             {
@@ -59,6 +59,19 @@ public class ErrorHandlingMiddleware
                 type = "ValidationError",
                 error = ex.Message,
                 detail = ex.Detail
+            },
+            FluentValidation.ValidationException ex => new
+            {
+                type = "ValidationError",
+                error = "Validation failed",
+                detail = ex.Errors
+                    .Select(e => new
+                    {
+                        field = e.PropertyName,
+                        error = e.ErrorMessage
+                    })
+                    .ToList()
+                // detail = ex.Message
             },
             _ => new
             {

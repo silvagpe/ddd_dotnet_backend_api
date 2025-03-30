@@ -22,8 +22,8 @@ public class SaleTest
         _snowflakeIdGenerator =  new Snowflake(workerId: 1, datacenterId: 1);
         _customer = new Customer(_snowflakeIdGenerator.NextId(), "John", "Doe", "john@example.com", "1234567890");
         _branch = new Branch(_snowflakeIdGenerator.NextId(), "Main Branch", "123 Main St", "City", "State", "99123", "12345");
-        _product1 = new Product(_snowflakeIdGenerator.NextId(), "Product 1", "Description 1", Money.FromDecimal(10.99m), "Software");
-        _product2 = new Product(_snowflakeIdGenerator.NextId(), "Product 2", "Description 2", Money.FromDecimal(20.50m),  "Hardware");
+        _product1 = new Product(_snowflakeIdGenerator.NextId(), "Product 1", "Description 1", Money.FromDecimal(10.99m), "Software", new Rating(4.5, 100));
+        _product2 = new Product(_snowflakeIdGenerator.NextId(), "Product 2", "Description 2", Money.FromDecimal(20.50m),  "Hardware", new Rating(4.0, 50));
     }
 
     [Fact]
@@ -73,7 +73,7 @@ public class SaleTest
         // Act & Assert
         Action act = () => sale.AddItem(_snowflakeIdGenerator.NextId(), _product1, 2, Money.FromDecimal(10.00m));
         act.Should().Throw<BusinessRuleException>()
-           .WithMessage($"Product {_product1.Name} is already in the sale. Update the quantity instead.");
+           .WithMessage($"Product {_product1.Title} is already in the sale. Update the quantity instead.");
     }
 
     [Fact]

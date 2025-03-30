@@ -86,6 +86,7 @@ public class ErrorHandlingMiddleware
             ResourceNotFoundException => (int)HttpStatusCode.NotFound,
             AuthenticationException => (int)HttpStatusCode.Unauthorized,
             ValidationException => (int)HttpStatusCode.BadRequest,
+            FluentValidation.ValidationException => (int)HttpStatusCode.BadRequest,
             _ => (int)HttpStatusCode.InternalServerError
         };
 

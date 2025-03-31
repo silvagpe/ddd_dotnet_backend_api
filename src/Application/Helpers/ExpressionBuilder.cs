@@ -5,33 +5,37 @@ namespace DeveloperStore.Application.Helpers;
 
 public static class ExpressionBuilder
 {
-    public static Expression BuildComparisonExpression<T>(MemberExpression member, string operation, string value){
+    public static Expression BuildComparisonExpression<T>(
+        MemberExpression member, 
+        string operation, 
+        string originalValue, 
+        object? convertedValue = null){
         
-        var constant = Expression.Constant(Convert.ChangeType(value, member.Type));
+        var constant = Expression.Constant(convertedValue ?? Convert.ChangeType(originalValue, member.Type));
 
         if (operation == "=")
         {
-            if (value.StartsWith("*"))
+            if (originalValue.StartsWith("*"))
             {                
                 return Expression.Call(
                         Expression.Call(member, "ToLower", null),
                         typeof(string).GetMethod("EndsWith", new[] { typeof(string) }),
-                        Expression.Constant(value.TrimStart('*').ToLower())
+                        Expression.Constant(originalValue.TrimStart('*').ToLower())
                     );
             }
-            else if (value.EndsWith("*"))
+            else if (originalValue.EndsWith("*"))
             {                
                 return Expression.Call(
                         Expression.Call(member, "ToLower", null),
                         typeof(string).GetMethod("StartsWith", new[] { typeof(string) }),
-                        Expression.Constant(value.TrimEnd('*').ToLower())
+                        Expression.Constant(originalValue.TrimEnd('*').ToLower())
                 );
             }
             else
             {                
                 return Expression.Equal(
                     Expression.Call(member, "ToLower", null),
-                    Expression.Constant(value.ToLower())
+                    Expression.Constant(originalValue.ToLower())
                 );
             }
         }        

@@ -20,7 +20,7 @@ public class ProductMappingProfile : Profile
             .ConvertUsing(src => src.Value); 
 
         CreateMap<Product, ProductDto>()
-            .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.Price.Value))
+            // .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.Price.Value))
             .ForMember(dest => dest.Image, opt => opt.MapFrom(src => src.ImageUrl));
 
         CreateMap<CreateProductCommand, Product>()     

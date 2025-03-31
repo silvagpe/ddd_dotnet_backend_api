@@ -87,6 +87,7 @@ public class MoneyTests
     {
         var money = new Money(100.50m, "USD");
 
-        Assert.Equal("100,50 USD", money.ToString());
+        decimal expected = 100.50m;
+        Assert.Equal($"{expected} USD", money.ToString());
     }
 }

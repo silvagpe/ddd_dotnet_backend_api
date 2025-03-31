@@ -17,9 +17,9 @@ public class Discount : ValueObject
         Percentage = percentage;
     }
 
-    public Money ApplyTo(Money amount)
+    public decimal ApplyTo(decimal amount)
     {
-        return amount.Multiply(1 - Percentage);
+        return amount * (1 - Percentage);
     }
 
     public static Discount None => new Discount(0);

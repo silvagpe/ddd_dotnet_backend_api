@@ -24,6 +24,14 @@ public class Money : ValueObject
         return new Money(value, currency);
     }
 
+    public static Money FromString(string  value, string currency = "USD")
+    {
+        if (!decimal.TryParse(value, out var parsedValue))
+            throw new BusinessRuleException("Invalid money value format");
+            
+        return new Money(parsedValue, currency);
+    }
+
     public static Money Zero(string currency = "USD")
     {
         return new Money(0, currency);
@@ -60,4 +68,33 @@ public class Money : ValueObject
     {
         return $"{Value} {Currency}";
     }
+
+    public static bool operator >=(Money left, Money right)
+    {
+        if (left.Currency != right.Currency)
+            throw new InvalidOperationException("Cannot compare Money with different currencies.");
+
+        return left.Value >= right.Value;
+    }
+
+    public static bool operator <=(Money left, Money right)
+    {
+        if (left.Currency != right.Currency)
+            throw new InvalidOperationException("Cannot compare Money with different currencies.");
+
+        return left.Value <= right.Value;
+    }
+
+    public static bool operator >(Money left, Money right) => left >= right && left != right;
+    public static bool operator <(Money left, Money right) => left <= right && left != right;
+
+    public override bool Equals(object obj)
+    {
+        if (obj is Money other)
+            return Value == other.Value && Currency == other.Currency;
+
+        return false;
+    }
+
+    public override int GetHashCode() => HashCode.Combine(Value, Currency);
 }

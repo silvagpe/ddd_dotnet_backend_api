@@ -1,10 +1,11 @@
 using System.Linq.Expressions;
 using DeveloperStore.Application.Helpers;
+using DeveloperStore.Domain.ValueObjects;
 namespace DeveloperStore.Application.Extensions;
 
 public static class QueryableExtensions
 {
-    public static IQueryable<T> ApplyFilters<T>(this IQueryable<T> query, IDictionary<string,string> fields)
+    public static IQueryable<T> ApplyFilters<T>(this IQueryable<T> query, IDictionary<string, string> fields)
     {
         foreach (var filter in fields)
         {
@@ -31,9 +32,23 @@ public static class QueryableExtensions
     }
     public static IQueryable<T> WhereDynamic<T>(this IQueryable<T> query, string field, string operation, string value)
     {
-        var parameter = Expression.Parameter(typeof(T), "x");        
+        var parameter = Expression.Parameter(typeof(T), "x");
         var member = Expression.PropertyOrField(parameter, field);
-        var comparison = ExpressionBuilder.BuildComparisonExpression<T>(member, operation, value);    
+
+        object convertedValue;
+        if (member.Type == typeof(Money))
+        {
+            // Assuming Money has a static method Parse or similar for conversion
+            convertedValue = Money.FromString(value); // Replace with your actual conversion logic
+        }
+        else
+        {
+            // Default conversion for other types
+            convertedValue = Convert.ChangeType(value, member.Type);
+        }
+
+        // var comparison = ExpressionBuilder.BuildComparisonExpression<T>(member, operation, value);
+        var comparison = ExpressionBuilder.BuildComparisonExpression<T>(member, operation, value, convertedValue);
         var lambda = Expression.Lambda<Func<T, bool>>(comparison, parameter);
         return query.Where(lambda);
     }

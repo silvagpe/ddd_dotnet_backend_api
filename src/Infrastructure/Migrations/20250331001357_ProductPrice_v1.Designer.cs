@@ -3,6 +3,7 @@ using System;
 using DeveloperStore.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DeveloperStore.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250331001357_ProductPrice_v1")]
+    partial class ProductPrice_v1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -175,10 +178,6 @@ namespace DeveloperStore.Infrastructure.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("status");
 
-                    b.Property<decimal>("TotalAmount")
-                        .HasColumnType("numeric")
-                        .HasColumnName("totalamount");
-
                     b.HasKey("Id")
                         .HasName("pk_sales");
 
@@ -208,14 +207,6 @@ namespace DeveloperStore.Infrastructure.Migrations
                     b.Property<long>("SaleId")
                         .HasColumnType("bigint")
                         .HasColumnName("saleid");
-
-                    b.Property<decimal>("TotalPrice")
-                        .HasColumnType("numeric")
-                        .HasColumnName("totalprice");
-
-                    b.Property<decimal>("UnitPrice")
-                        .HasColumnType("numeric")
-                        .HasColumnName("unitprice");
 
                     b.HasKey("Id")
                         .HasName("pk_saleitems");
@@ -272,9 +263,34 @@ namespace DeveloperStore.Infrastructure.Migrations
                         .IsRequired()
                         .HasConstraintName("fk_sales_customers_customerid");
 
+                    b.OwnsOne("DeveloperStore.Domain.ValueObjects.Money", "TotalAmount", b1 =>
+                        {
+                            b1.Property<long>("SaleId")
+                                .HasColumnType("bigint");
+
+                            b1.Property<string>("Currency")
+                                .IsRequired()
+                                .HasColumnType("text")
+                                .HasColumnName("currency");
+
+                            b1.Property<decimal>("Value")
+                                .HasColumnType("numeric")
+                                .HasColumnName("value");
+
+                            b1.HasKey("SaleId");
+
+                            b1.ToTable("money");
+
+                            b1.WithOwner()
+                                .HasForeignKey("SaleId");
+                        });
+
                     b.Navigation("Branch");
 
                     b.Navigation("Customer");
+
+                    b.Navigation("TotalAmount")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("DeveloperStore.Domain.Entities.SaleItem", b =>
@@ -292,6 +308,46 @@ namespace DeveloperStore.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_saleitems_sales_saleid");
+
+                    b.OwnsOne("DeveloperStore.Domain.ValueObjects.Money", "TotalPrice", b1 =>
+                        {
+                            b1.Property<long>("SaleItemId")
+                                .HasColumnType("bigint");
+
+                            b1.Property<string>("Currency")
+                                .IsRequired()
+                                .HasColumnType("text");
+
+                            b1.Property<decimal>("Value")
+                                .HasColumnType("numeric");
+
+                            b1.HasKey("SaleItemId");
+
+                            b1.ToTable("saleitems");
+
+                            b1.WithOwner()
+                                .HasForeignKey("SaleItemId");
+                        });
+
+                    b.OwnsOne("DeveloperStore.Domain.ValueObjects.Money", "UnitPrice", b1 =>
+                        {
+                            b1.Property<long>("SaleItemId")
+                                .HasColumnType("bigint");
+
+                            b1.Property<string>("Currency")
+                                .IsRequired()
+                                .HasColumnType("text");
+
+                            b1.Property<decimal>("Value")
+                                .HasColumnType("numeric");
+
+                            b1.HasKey("SaleItemId");
+
+                            b1.ToTable("saleitems");
+
+                            b1.WithOwner()
+                                .HasForeignKey("SaleItemId");
+                        });
 
                     b.OwnsOne("DeveloperStore.Domain.ValueObjects.Discount", "Discount", b1 =>
                         {
@@ -316,6 +372,12 @@ namespace DeveloperStore.Infrastructure.Migrations
                     b.Navigation("Product");
 
                     b.Navigation("Sale");
+
+                    b.Navigation("TotalPrice")
+                        .IsRequired();
+
+                    b.Navigation("UnitPrice")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("DeveloperStore.Domain.Entities.Branch", b =>

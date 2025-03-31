@@ -25,7 +25,7 @@ public class Sale : Entity, IAggregateRoot
     public Branch Branch { get; private set; }
 
     public SaleStatus Status { get; private set; }
-    public Money TotalAmount { get; private set; }
+    public decimal TotalAmount { get; private set; }
 
     private readonly List<SaleItem> _items = new List<SaleItem>();
     public IReadOnlyCollection<SaleItem> Items => _items.AsReadOnly();
@@ -47,13 +47,13 @@ public class Sale : Entity, IAggregateRoot
         Branch = branch ?? throw new ArgumentNullException(nameof(branch));
         BranchId = branch.Id;
         Status = SaleStatus.Created;
-        TotalAmount = Money.Zero();
+        TotalAmount = 0;
 
         _domainEvents.Add(new SaleCreatedEvent(this));
     }
 
 
-    public void AddItem(long itemId, Product product, int quantity, Money unitPrice)
+    public void AddItem(long itemId, Product product, int quantity, decimal unitPrice)
     {
         if (product is null)
             throw new ArgumentNullException(nameof(product));
@@ -114,10 +114,10 @@ public class Sale : Entity, IAggregateRoot
 
     private void RecalculateTotalAmount()
     {
-        var total = Money.Zero();
+        decimal total = 0;
         foreach (var item in _items)
         {
-            total = total.Add(item.TotalPrice);
+            total = total + item.TotalPrice;
         }
         TotalAmount = total;
     }

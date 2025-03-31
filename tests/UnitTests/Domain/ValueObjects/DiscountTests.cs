@@ -34,13 +34,13 @@ public class DiscountTests
     {
         // Arrange
         var discount = new Discount(0.1m);
-        var originalAmount = new Money(100m, "USD");
+        var originalAmount = 100m;
 
         // Act
         var discountedAmount = discount.ApplyTo(originalAmount);
 
         // Assert
-        Assert.Equal(90m, discountedAmount.Value);
+        Assert.Equal(90m, discountedAmount);
     }
 
     [Fact]
@@ -63,6 +63,7 @@ public class DiscountTests
         var result = discount.ToString();
 
         // Assert
-        Assert.Equal("15,00%", result);
+        decimal expected = 15.00m;
+        Assert.Equal($"{expected}%", result);
     }
 }

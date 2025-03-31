@@ -17,7 +17,7 @@ dotnet ef database update --project .\Infrastructure.csproj --startup-project ..
 ## Linuxs
 
 ```
- dotnet ef migrations add InitialCreate --project Infrastructure.csproj  --startup-project ../Api/Api.csproj
+dotnet ef migrations add InitialCreate --project Infrastructure.csproj  --startup-project ../Api/Api.csproj
 
 
 dotnet ef migrations list --project Infrastructure.csproj --startup-project ../Api/Api.csproj

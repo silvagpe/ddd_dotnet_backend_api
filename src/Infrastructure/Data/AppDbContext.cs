@@ -32,7 +32,7 @@ public class AppDbContext : DbContext
             .Property(b => b.Id)
             .ValueGeneratedNever();
 
-        SeedBranchData(modelBuilder);
+        SeedBranchesData(modelBuilder);
 
         #endregion
 
@@ -43,6 +43,8 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<Customer>()
             .Property(c => c.Id)
             .ValueGeneratedNever();
+
+        SeedCustomersData(modelBuilder);
         
         #endregion
 
@@ -142,12 +144,22 @@ public class AppDbContext : DbContext
         }
     }
 
-    private void SeedBranchData(ModelBuilder modelBuilder)
+    private void SeedBranchesData(ModelBuilder modelBuilder)
     {
         // Seed data
         modelBuilder.Entity<Branch>().HasData(
             new Branch(1, "Main Branch", "123 Main St", "New York", "NY", "10001", "123-456-7890"),
             new Branch(2, "Secondary Branch", "456 Elm St", "Los Angeles", "CA", "90001", "987-654-3210")
+        );
+    }
+
+    private void SeedCustomersData(ModelBuilder modelBuilder)
+    {
+        // Seed data
+        modelBuilder.Entity<Customer>().HasData(
+            new Customer(1, "John", "Doe", "john.doe@example.com", "123-456-7890"),
+            new Customer(2, "Jane", "Smith", "jane.smith@example.com", "987-654-3210"),
+            new Customer(3, "Alice", "Johnson", "alice.johnson@example.com", "555-123-4567")            
         );
     }
 }

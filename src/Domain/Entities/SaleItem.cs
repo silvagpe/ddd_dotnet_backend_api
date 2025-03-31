@@ -11,9 +11,9 @@ public class SaleItem : Entity
     public Product Product { get; private set; }
 
     public int Quantity { get; private set; }
-    public Money UnitPrice { get; private set; }
+    public decimal UnitPrice { get; private set; }
     public Discount Discount { get; private set; }
-    public Money TotalPrice { get; private set; }
+    public decimal TotalPrice { get; private set; }
 
     // Navigation property - EF Core
     public long SaleId { get; private set; }
@@ -23,7 +23,7 @@ public class SaleItem : Entity
     private SaleItem() { }  // For EF Core
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
 
-    public SaleItem(long id, Product product, int quantity, Money unitPrice)
+    public SaleItem(long id, Product product, int quantity, decimal unitPrice)
     {
         Id = id;
         if (quantity <= 0)
@@ -35,7 +35,7 @@ public class SaleItem : Entity
         Product = product ?? throw new ArgumentNullException(nameof(product));
         ProductId = product.Id;
         Quantity = quantity;
-        UnitPrice = unitPrice ?? throw new ArgumentNullException(nameof(unitPrice));
+        UnitPrice = unitPrice == 0 ? throw new ArgumentNullException(nameof(unitPrice)) : unitPrice;
         Discount = CalculateDiscount(quantity);
         TotalPrice = CalculateTotalPrice();
     }
@@ -50,9 +50,9 @@ public class SaleItem : Entity
             return Discount.None;
     }
 
-    private Money CalculateTotalPrice()
+    private decimal CalculateTotalPrice()
     {
-        var totalBeforeDiscount = UnitPrice.Multiply(Quantity);
+        var totalBeforeDiscount = UnitPrice *  Quantity;
         return Discount.ApplyTo(totalBeforeDiscount);
     }
 

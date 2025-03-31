@@ -1,4 +1,5 @@
 using DeveloperStore.Domain.Entities;
+using DeveloperStore.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using System;
 
@@ -52,9 +53,7 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<Product>()
             .Property(p => p.Id)
             .ValueGeneratedNever();
-        modelBuilder.Entity<Product>()
-            .OwnsOne(p => p.Price);
-
+   
         modelBuilder.Entity<Product>(builder =>
         {
             builder.OwnsOne(e => e.Rating, rating =>
@@ -80,8 +79,7 @@ public class AppDbContext : DbContext
             .HasOne(s => s.Branch)
             .WithMany(b => b.Sales)
             .HasForeignKey(s => s.BranchId);
-        modelBuilder.Entity<Sale>()
-            .OwnsOne(s => s.TotalAmount);
+        
 
         #endregion
         
@@ -99,12 +97,10 @@ public class AppDbContext : DbContext
             .HasOne(si => si.Product)
             .WithMany()
             .HasForeignKey(si => si.ProductId);
-        modelBuilder.Entity<SaleItem>()
-            .OwnsOne(si => si.UnitPrice);
+        
         modelBuilder.Entity<SaleItem>()
             .OwnsOne(si => si.Discount);
-        modelBuilder.Entity<SaleItem>()
-            .OwnsOne(si => si.TotalPrice);
+        
 
         #endregion
 

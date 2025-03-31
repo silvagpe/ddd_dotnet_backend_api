@@ -22,8 +22,8 @@ public class SaleTest
         _snowflakeIdGenerator =  new Snowflake(workerId: 1, datacenterId: 1);
         _customer = new Customer(_snowflakeIdGenerator.NextId(), "John", "Doe", "john@example.com", "1234567890");
         _branch = new Branch(_snowflakeIdGenerator.NextId(), "Main Branch", "123 Main St", "City", "State", "99123", "12345");
-        _product1 = new Product(_snowflakeIdGenerator.NextId(), "Product 1", "Description 1", Money.FromDecimal(10.99m), "Software", new Rating(4.5, 100));
-        _product2 = new Product(_snowflakeIdGenerator.NextId(), "Product 2", "Description 2", Money.FromDecimal(20.50m),  "Hardware", new Rating(4.0, 50));
+        _product1 = new Product(_snowflakeIdGenerator.NextId(), "Product 1", "Description 1", 10.99m, "Software", new Rating(4.5, 100));
+        _product2 = new Product(_snowflakeIdGenerator.NextId(), "Product 2", "Description 2", 20.50m,  "Hardware", new Rating(4.0, 50));
     }
 
     [Fact]
@@ -39,7 +39,7 @@ public class SaleTest
         sale.CustomerId.Should().Be(_customer.Id);
         sale.BranchId.Should().Be(_branch.Id);
         sale.Status.Should().Be(SaleStatus.Created);
-        sale.TotalAmount.Should().Be(Money.Zero());
+        sale.TotalAmount.Should().Be(0);
         sale.Items.Should().BeEmpty();
         sale.DomainEvents.Should().ContainSingle(e => e is SaleCreatedEvent);
     }
@@ -49,7 +49,7 @@ public class SaleTest
     {
         // Arrange
         var sale = new Sale(_snowflakeIdGenerator.NextId(),_customer, _branch, DateTime.Now);
-        var unitPrice = Money.FromDecimal(15.00m);
+        var unitPrice = 15.00m;
 
         // Act
         sale.AddItem(_snowflakeIdGenerator.NextId(), _product1, 2, unitPrice);
@@ -59,7 +59,7 @@ public class SaleTest
         sale.Items.First().ProductId.Should().Be(_product1.Id);
         sale.Items.First().Quantity.Should().Be(2);
         sale.Items.First().UnitPrice.Should().Be(unitPrice);
-        sale.TotalAmount.Should().Be(Money.FromDecimal(30.00m));
+        sale.TotalAmount.Should().Be(30.00m);
         sale.DomainEvents.Should().Contain(e => e is SaleModifiedEvent);
     }
 
@@ -68,10 +68,10 @@ public class SaleTest
     {
         // Arrange
         var sale = new Sale(_snowflakeIdGenerator.NextId(),_customer, _branch, DateTime.Now);
-        sale.AddItem(_snowflakeIdGenerator.NextId(), _product1, 1, Money.FromDecimal(10.00m));
+        sale.AddItem(_snowflakeIdGenerator.NextId(), _product1, 1, 10.00m);
 
         // Act & Assert
-        Action act = () => sale.AddItem(_snowflakeIdGenerator.NextId(), _product1, 2, Money.FromDecimal(10.00m));
+        Action act = () => sale.AddItem(_snowflakeIdGenerator.NextId(), _product1, 2, 10.00m);
         act.Should().Throw<BusinessRuleException>()
            .WithMessage($"Product {_product1.Title} is already in the sale. Update the quantity instead.");
     }
@@ -81,7 +81,7 @@ public class SaleTest
     {
         // Arrange
         var sale = new Sale(_snowflakeIdGenerator.NextId(),_customer, _branch, DateTime.Now);
-        sale.AddItem(_snowflakeIdGenerator.NextId(), _product1, 1, Money.FromDecimal(10.00m));
+        sale.AddItem(_snowflakeIdGenerator.NextId(), _product1, 1, 10.00m);
         var itemId = sale.Items.First().Id;
 
         // Act
@@ -89,7 +89,7 @@ public class SaleTest
 
         // Assert
         sale.Items.First().Quantity.Should().Be(3);
-        sale.TotalAmount.Should().Be(Money.FromDecimal(30.00m));
+        sale.TotalAmount.Should().Be(30.00m);
         sale.DomainEvents.Should().Contain(e => e is SaleModifiedEvent);
     }
 
@@ -98,8 +98,8 @@ public class SaleTest
     {
         // Arrange
         var sale = new Sale(_snowflakeIdGenerator.NextId(), _customer, _branch, DateTime.Now);
-        sale.AddItem(_snowflakeIdGenerator.NextId(),_product1, 2, Money.FromDecimal(10.00m));
-        sale.AddItem(_snowflakeIdGenerator.NextId(), _product2, 1, Money.FromDecimal(20.00m));
+        sale.AddItem(_snowflakeIdGenerator.NextId(),_product1, 2, 10.00m);
+        sale.AddItem(_snowflakeIdGenerator.NextId(), _product2, 1, 20.00m);
 
         // Act
         sale.RemoveItem(_product1.Id);
@@ -107,7 +107,7 @@ public class SaleTest
         // Assert
         sale.Items.Should().HaveCount(1);
         sale.Items.First().ProductId.Should().Be(_product2.Id);
-        sale.TotalAmount.Should().Be(Money.FromDecimal(20.00m));
+        sale.TotalAmount.Should().Be(20.00m);
         sale.DomainEvents.Should().Contain(e => e is ItemCancelledEvent);
         sale.DomainEvents.Should().Contain(e => e is SaleModifiedEvent);
     }
@@ -117,7 +117,7 @@ public class SaleTest
     {
         // Arrange
         var sale = new Sale(_snowflakeIdGenerator.NextId(),_customer, _branch, DateTime.Now);
-        sale.AddItem(_snowflakeIdGenerator.NextId(),_product1, 2, Money.FromDecimal(10.00m));
+        sale.AddItem(_snowflakeIdGenerator.NextId(),_product1, 2, 10.00m);
 
         // Act
         sale.CompleteSale();
@@ -158,7 +158,7 @@ public class SaleTest
     {
         // Arrange
         var sale = new Sale(_snowflakeIdGenerator.NextId(), _customer, _branch, DateTime.Now);
-        sale.AddItem(_snowflakeIdGenerator.NextId(), _product1, 1, Money.FromDecimal(10.00m));
+        sale.AddItem(_snowflakeIdGenerator.NextId(), _product1, 1, 10.00m);
         sale.CompleteSale();
 
         // Act & Assert
@@ -172,7 +172,7 @@ public class SaleTest
     {
         // Arrange
         var sale = new Sale(_snowflakeIdGenerator.NextId(), _customer, _branch, DateTime.Now);
-        sale.AddItem(_snowflakeIdGenerator.NextId(), _product1, 1, Money.FromDecimal(10.00m));
+        sale.AddItem(_snowflakeIdGenerator.NextId(), _product1, 1, 10.00m);
 
         // Act
         sale.ClearDomainEvents();

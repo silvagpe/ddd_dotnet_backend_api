@@ -18,8 +18,8 @@ public class ProductTests
     [Fact]
     public void Constructor_ShouldInitializeProperties()
     {
-        var price = new Money(100);
-        var product = new Product(_snowflakeIdGenerator.NextId(), "ProductName", "Description", price, "Category", new Rating(5,100), "ImageUrl");
+        var price = 100;
+        var product = new Product(_snowflakeIdGenerator.NextId(), "ProductName", "Description", 100, "Category", new Rating(5,100), "ImageUrl");
 
         Assert.Equal("ProductName", product.Title);
         Assert.Equal("Description", product.Description);
@@ -31,14 +31,14 @@ public class ProductTests
     [Fact]
     public void UpdateDetails_ShouldUpdateProperties()
     {
-        var price = new Money(100);
+        var price = 100;
         var product = new Product(_snowflakeIdGenerator.NextId(), "ProductName", "Description", price, "Category", new Rating(4.5,70),"ImageUrl");
 
-        product.UpdateDetails("NewName", "NewDescription", new Money(200), "NewCategory", "NewImageUrl");
+        product.UpdateDetails("NewName", "NewDescription", 200, "NewCategory", "NewImageUrl");
 
         Assert.Equal("NewName", product.Title);
         Assert.Equal("NewDescription", product.Description);
-        Assert.Equal(new Money(200), product.Price);
+        Assert.Equal(200, product.Price);
         Assert.Equal("NewCategory", product.Category);
         Assert.Equal("NewImageUrl", product.ImageUrl);
     }

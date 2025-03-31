@@ -17,7 +17,6 @@ public class Sale : Entity, IAggregateRoot
     public string SaleNumber { get; private set; }
     public DateTime SaleDate { get; private set; }
 
-    // External Identity pattern with denormalized details
     public long CustomerId { get; private set; }
     public Customer Customer { get; private set; }
 

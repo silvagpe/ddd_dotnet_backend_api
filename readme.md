@@ -1,32 +1,22 @@
-# Readme
+# Project Overview (DeveloperStore)
 
+This system is designed to manage sales operations for a store, including handling customers, products, branches, and sales transactions. It provides functionality for creating, updating, and managing sales, applying discounts, and tracking domain events for business processes.
 
-### Windows
+It includes features such as:
+- Managing customers, products, and branches.
+- Handling sales transactions with discounts and item management.
+- Publishing and tracking domain events for system consistency.
 
-Crie a migration inicial: No terminal, navegue até o diretório do projeto Infrastructure e execute o comando para criar a migration:
-```
-dotnet ef migrations add InitialCreate --project .\Infrastructure.csproj  --startup-project ..\Api\Api.csproj
-```
+## Key Technologies
 
-Aplique a migration para criar o banco: Após criar a migration, aplique-a para gerar o banco de dados:
-```
-dotnet ef database update --project .\Infrastructure.csproj --startup-project ..\Api\Api.csproj
-```
+- .NET 8.0
+- Domain-Driven Design (DDD)
+- Entity Framework Core
 
+## How to Use
 
-## Linuxs
+1. Clone the repository and set up the environment.
+2. Build the project using .NET 8.0.
+3. Run the application and interact with the system through the provided interfaces.
 
-```
-dotnet ef migrations add InitialCreate --project Infrastructure.csproj  --startup-project ../Api/Api.csproj
-
-
-dotnet ef migrations list --project Infrastructure.csproj --startup-project ../Api/Api.csproj
-dotnet ef migrations remove 20250327225921_ProductRating --project Infrastructure.csproj  --startup-project ../Api/Api.csproj
-```
-
-```
-dotnet ef database update --project Infrastructure.csproj --startup-project ../Api/Api.csproj
-
-
-dotnet ef database update 20250327225921_ProductRating --project Infrastructure.csproj --startup-project ../Api/Api.csproj
-```
+For more details, refer to the documentation or contact the development team.

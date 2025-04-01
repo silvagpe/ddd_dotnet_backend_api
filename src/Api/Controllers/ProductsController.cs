@@ -77,7 +77,7 @@ public class ProductsController : ControllerBase
     {
         DeleteProductCommand command = new DeleteProductCommand(productId);
         var result = await _mediator.Send(command);
-        return Ok(new {messge = result});
+        return Ok(new {message = result});
     }
     
     [HttpGet("categories")]

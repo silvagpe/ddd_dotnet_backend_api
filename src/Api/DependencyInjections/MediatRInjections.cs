@@ -1,5 +1,6 @@
 using System.Reflection;
 using DeveloperStore.Application;
+using DeveloperStore.Application.Features.Carts.Commands;
 using DeveloperStore.Application.Features.Products.Commands;
 using DeveloperStore.Application.Features.Products.Dtos;
 using DeveloperStore.Application.Features.Products.Queries;
@@ -17,6 +18,7 @@ public static class MediatRInjections
         services.AddTransient<IValidator<CreateProductCommand>, CreateProductCommandValidator>();
         services.AddTransient<IValidator<UpdateProductCommand>, UpdateProductCommandValidator>();
         services.AddTransient<IValidator<DeleteProductCommand>, DeleteProductCommandValidator>();
+        services.AddTransient<IValidator<CreateCartCommand>, CreateCartCommandValidator>();
         services.AddTransient<IValidator<GetProductsByCategoryQuery>, GetProductsByCategoryQueryValidator>();
         services.AddTransient<IValidator<RatingDto>, RatingDtoValidator>();
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));              

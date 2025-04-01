@@ -1,6 +1,7 @@
 using DeveloperStore.Domain.Entities;
 using DeveloperStore.Domain.Repositories;
 using DeveloperStore.Infrastructure.Data;
+using DeveloperStore.Infrastructure.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 namespace DeveloperStore.Infrastructure.Repositories;
@@ -37,13 +38,24 @@ public class ProductRepository : IProductRepository
         return false;
     }
 
-    public async Task<IEnumerable<Product>> GetAllAsync(CancellationToken cancellationToken, int page = 1, int pageSize = 10)
+    public async Task<(IEnumerable<Product> Products, int TotalItems)> GetAllAsync(CancellationToken cancellationToken, Dictionary<string, string> fields, string? order, int page = 1, int pageSize = 10)
     {
-        return await _context.Products
-            .AsNoTracking()
+        var query = _context.Products.AsQueryable();
+
+        query = query.ApplyFilters(fields);
+        
+        if (!string.IsNullOrEmpty(order))
+        {
+            query = query.OrderByDynamic(order);
+        }
+        
+        var totalItems = await query.CountAsync(cancellationToken);
+        var data = await query
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
             .ToListAsync(cancellationToken);
+
+        return (data, totalItems);
     }
 
     public async Task<Product?> GetByIdAsync(long id, CancellationToken cancellationToken)
@@ -51,6 +63,14 @@ public class ProductRepository : IProductRepository
         return await _context.Products
             .AsNoTracking()
             .FirstOrDefaultAsync(p => p.Id == id, cancellationToken);
+    }
+
+    public async Task<IList<Product>> GetByIdsAsync(long[] ids, CancellationToken cancellationToken)
+    {
+        return await _context.Products
+            .AsNoTracking()
+            .Where(p => ids.Contains(p.Id))
+            .ToListAsync(cancellationToken);
     }
 
     public async Task<int> GetTotalCountAsync(CancellationToken cancellationToken)

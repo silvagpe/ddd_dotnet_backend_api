@@ -4,11 +4,12 @@ namespace DeveloperStore.Domain.Repositories;
 
 public interface ISaleRepository
 {
-    Task<Sale> GetByIdAsync(int id);
-    Task<Sale> GetBySaleNumberAsync(string saleNumber);
-    Task<IEnumerable<Sale>> GetAllAsync(int page = 1, int pageSize = 10);
-    Task<int> GetTotalCountAsync();
-    Task<Sale> AddAsync(Sale sale);
-    Task UpdateAsync(Sale sale);
-    Task DeleteAsync(int id);
+    Task<Sale?> GetByIdAsync(long id, CancellationToken cancellationToken);
+    Task<Sale> GetBySaleNumberAsync(string saleNumber, CancellationToken cancellationToken);
+    Task<(IEnumerable<Sale> Sales, int TotalItems)> GetAllAsync(
+        CancellationToken cancellationToken, Dictionary<string, string> fields, string? order, int page = 1, int pageSize = 10);
+    Task<int> GetTotalCountAsync(CancellationToken cancellationToken);
+    Task<Sale> AddAsync(Sale sale, CancellationToken cancellationToken);
+    Task<Sale> UpdateAsync(Sale sale, CancellationToken cancellationToken);
+    Task<bool> DeleteAsync(long id, CancellationToken cancellationToken);
 }

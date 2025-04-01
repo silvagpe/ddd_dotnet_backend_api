@@ -17,7 +17,6 @@ public class Sale : Entity, IAggregateRoot
     public string SaleNumber { get; private set; }
     public DateTime SaleDate { get; private set; }
 
-    // External Identity pattern with denormalized details
     public long CustomerId { get; private set; }
     public Customer Customer { get; private set; }
 
@@ -41,7 +40,7 @@ public class Sale : Entity, IAggregateRoot
     {
         Id = id;
         SaleNumber = GenerateSaleNumber();
-        SaleDate = saleDate;
+        SaleDate = saleDate.Kind == DateTimeKind.Utc ? saleDate : saleDate.ToUniversalTime(); 
         Customer = customer ?? throw new ArgumentNullException(nameof(customer));
         CustomerId = customer.Id;
         Branch = branch ?? throw new ArgumentNullException(nameof(branch));

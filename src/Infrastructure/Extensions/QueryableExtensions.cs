@@ -1,7 +1,8 @@
 using System.Linq.Expressions;
-using DeveloperStore.Application.Helpers;
 using DeveloperStore.Domain.ValueObjects;
-namespace DeveloperStore.Application.Extensions;
+using DeveloperStore.Infrastructure.Extensions;
+
+namespace DeveloperStore.Infrastructure.Extensions;
 
 public static class QueryableExtensions
 {
@@ -41,13 +42,18 @@ public static class QueryableExtensions
             // Assuming Money has a static method Parse or similar for conversion
             convertedValue = Money.FromString(value); // Replace with your actual conversion logic
         }
+        else if (member.Type == typeof(DateTime))
+        {
+            // Converte o valor para DateTime e garante que ele esteja em UTC
+            var dateTimeValue = DateTime.Parse(value);
+            convertedValue = dateTimeValue.Kind == DateTimeKind.Utc ? dateTimeValue : dateTimeValue.ToUniversalTime();
+        }
         else
         {
             // Default conversion for other types
             convertedValue = Convert.ChangeType(value, member.Type);
         }
 
-        // var comparison = ExpressionBuilder.BuildComparisonExpression<T>(member, operation, value);
         var comparison = ExpressionBuilder.BuildComparisonExpression<T>(member, operation, value, convertedValue);
         var lambda = Expression.Lambda<Func<T, bool>>(comparison, parameter);
         return query.Where(lambda);

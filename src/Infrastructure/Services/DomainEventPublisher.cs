@@ -13,7 +13,7 @@ public class DomainEventPublisher : IDomainEventPublisher
         _logger = logger;
     }
 
-    public Task PublishAsync(IDomainEvent domainEvent)
+    public Task PublishAsync(IDomainEvent domainEvent, CancellationToken cancellationToken)
     {
         // TODO: Implement the logic to publish the domain event        
         // For now, we will just log the event for demonstration purposes

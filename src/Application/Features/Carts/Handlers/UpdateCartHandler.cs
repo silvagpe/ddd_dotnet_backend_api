@@ -60,14 +60,14 @@ public class UpdateCartHandler : IRequestHandler<UpdateCartCommand, SaleDto?>
             throw new ValidationException(validationFailure);
         }
 
-        var productsToRemove = saleExist.Items.Where(i => !validProducts.Any(p => p.Id == i.ProductId)).ToList();
-        foreach (var product in productsToRemove)
+        var saleItemToRemove = saleExist.Items.Where(i => !validProducts.Any(p => p.Id == i.ProductId)).ToList();
+        foreach (var saleItem in saleItemToRemove)
         {
-            saleExist.RemoveItem(product.Id);
+            saleExist.RemoveItem(saleItem.ProductId);
         }
 
-        var productsToUpdate = validProducts.Where(p => saleExist.Items.Any(i => i.ProductId == p.Id)).ToList();
-        foreach (var product in productsToUpdate)
+        var productToUpdate = validProducts.Where(p => saleExist.Items.Any(i => i.ProductId == p.Id)).ToList();
+        foreach (var product in productToUpdate)
         {
             var cartProduct = request.Products.FirstOrDefault(p => p.ProductId == product.Id);
             if (cartProduct != null)
@@ -76,8 +76,8 @@ public class UpdateCartHandler : IRequestHandler<UpdateCartCommand, SaleDto?>
             }
         }
 
-        var productsToAdd = validProducts.Where(p => !saleExist.Items.Any(i => i.ProductId == p.Id)).ToList();
-        foreach (var product in productsToAdd)
+        var productToAdd = validProducts.Where(p => !saleExist.Items.Any(i => i.ProductId == p.Id)).ToList();
+        foreach (var product in productToAdd)
         {
             var cartProduct = request.Products.FirstOrDefault(p => p.ProductId == product.Id);
             if (cartProduct != null)

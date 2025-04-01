@@ -6,9 +6,9 @@ using MediatR;
 using DeveloperStore.Api.Middleware;
 using DeveloperStore.Api.Extensions;
 using DeveloperStore.Application.Features.Products.Commands;
-using DeveloperStore.Application.Features.Products.Queries;
 using DeveloperStore.Application.Features.Carts.Commands;
 using Namespace.Application.Features.Carts.Queries;
+using DeveloperStore.Application.Features.Carts.Queries;
 
 [ApiController]
 [Route("api/[controller]")]
@@ -24,7 +24,7 @@ public class CartsController : ControllerBase
     [HttpGet("{id:long}")]
     public async Task<IActionResult> GetCartAsync(long id)
     {
-        var result = await _mediator.Send(new GetProductByIdQuery(id));
+        var result = await _mediator.Send(new GetCartByIdQuery(id));
 
         if (result == null)
         {

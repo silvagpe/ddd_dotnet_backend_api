@@ -1,7 +1,8 @@
 using System.Linq.Expressions;
-using DeveloperStore.Application.Helpers;
 using DeveloperStore.Domain.ValueObjects;
-namespace DeveloperStore.Application.Extensions;
+using DeveloperStore.Infrastructure.Extensions;
+
+namespace DeveloperStore.Infrastructure.Extensions;
 
 public static class QueryableExtensions
 {
@@ -46,9 +47,8 @@ public static class QueryableExtensions
             // Default conversion for other types
             convertedValue = Convert.ChangeType(value, member.Type);
         }
-
-        // var comparison = ExpressionBuilder.BuildComparisonExpression<T>(member, operation, value);
-        var comparison = ExpressionBuilder.BuildComparisonExpression<T>(member, operation, value, convertedValue);
+        
+        var comparison = ExpressionBuilder.BuildComparisonExpression<T>(member, operation, value, convertedValue);        
         var lambda = Expression.Lambda<Func<T, bool>>(comparison, parameter);
         return query.Where(lambda);
     }

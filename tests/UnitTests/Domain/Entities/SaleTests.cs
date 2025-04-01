@@ -30,7 +30,7 @@ public class SaleTest
     public void Constructor_ShouldCreateValidSale()
     {
         // Arrange & Act
-        var saleDate = DateTime.Now;
+        var saleDate = DateTime.Now.ToUniversalTime();
         var sale = new Sale(_snowflakeIdGenerator.NextId(),_customer, _branch, saleDate);
 
         // Assert

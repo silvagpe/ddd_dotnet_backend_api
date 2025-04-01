@@ -10,7 +10,7 @@ public class SaleItemTest
     private readonly Product _product;
     public SaleItemTest()
     {
-        _product = new Product(1, "Test Product", "Test Description", 50, "Category", null);        
+        _product = new Product(1, "Test Product", "Test Description", 50, "Category", new Rating(4.5, 100));        
     }
 
     [Fact]

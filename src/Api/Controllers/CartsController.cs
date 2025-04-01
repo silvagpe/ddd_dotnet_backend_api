@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 using MediatR;
 using DeveloperStore.Api.Middleware;
 using DeveloperStore.Api.Extensions;
-using DeveloperStore.Application.Features.Products.Commands;
 using DeveloperStore.Application.Features.Carts.Commands;
 using Namespace.Application.Features.Carts.Queries;
 using DeveloperStore.Application.Features.Carts.Queries;
@@ -76,7 +75,7 @@ public class CartsController : ControllerBase
     [HttpDelete("{id:long}")]
     public async Task<IActionResult> DeleteCartAsync(long id)
     {
-        DeleteProductCommand command = new DeleteProductCommand(id);
+        var command = new DeleteCartCommand(id);
         var result = await _mediator.Send(command);
         return Ok(new {messge = result});
     }

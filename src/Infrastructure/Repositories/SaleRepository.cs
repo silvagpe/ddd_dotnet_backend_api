@@ -47,9 +47,15 @@ public class SaleRepository : ISaleRepository
             throw;
         }
     }
-    public Task DeleteAsync(long id, CancellationToken cancellationToken)
+    public async Task<bool> DeleteAsync(long id, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        var sale = await _context.Sales.FindAsync([id], cancellationToken);
+        if (sale is not null)
+        {
+            _context.Sales.Remove(sale);
+            return await _context.SaveChangesAsync(cancellationToken) > 0;
+        }
+        return false;
     }
 
     public async Task<(IEnumerable<Sale> Sales, int TotalItems)> GetAllAsync(CancellationToken cancellationToken, Dictionary<string, string> fields, string? order, int page = 1, int pageSize = 10)

@@ -11,5 +11,5 @@ public interface ISaleRepository
     Task<int> GetTotalCountAsync(CancellationToken cancellationToken);
     Task<Sale> AddAsync(Sale sale, CancellationToken cancellationToken);
     Task<Sale> UpdateAsync(Sale sale, CancellationToken cancellationToken);
-    Task DeleteAsync(long id, CancellationToken cancellationToken);
+    Task<bool> DeleteAsync(long id, CancellationToken cancellationToken);
 }

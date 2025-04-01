@@ -8,12 +8,11 @@ public class CartMappingProfile : Profile
 {
     public CartMappingProfile()
     {
-        CreateMap<Commands.CartProduct, Domain.Entities.SaleItem>()
+        CreateMap<Commands.CartProduct, Domain.Entities.SaleItem>()            
             .ForMember(dest => dest.ProductId, opt => opt.MapFrom(src => src.ProductId))
             .ForMember(dest => dest.Quantity, opt => opt.MapFrom(src => src.Quantity));
             
-        CreateMap<Commands.CreateCartCommand, Domain.Entities.Sale>()
-            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+        CreateMap<Commands.CreateCartCommand, Domain.Entities.Sale>()            
             .ForMember(dest => dest.CustomerId, opt => opt.MapFrom(src => src.UserId))
             .ForMember(dest => dest.SaleDate, opt => opt.MapFrom(src => DateTime.Parse(src.Date.ToString())))
             .ForMember(dest => dest.Items, opt => opt.MapFrom(src => src.Products));
@@ -26,7 +25,6 @@ public class CartMappingProfile : Profile
         CreateMap<Domain.Entities.Sale, Dtos.SaleDto>()
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
             .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.CustomerId))
-            .ForMember(dest => dest.Date, opt => opt.MapFrom(src => src.SaleDate.ToString("yyyy-MM-dd")))
-            .ForMember(dest => dest.Products, opt => opt.MapFrom(src => src.Items));
+            .ForMember(dest => dest.Date, opt => opt.MapFrom(src => src.SaleDate.ToString("yyyy-MM-dd")));
     }
 }

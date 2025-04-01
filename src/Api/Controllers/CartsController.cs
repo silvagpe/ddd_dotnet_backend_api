@@ -8,6 +8,7 @@ using DeveloperStore.Api.Extensions;
 using DeveloperStore.Application.Features.Products.Commands;
 using DeveloperStore.Application.Features.Products.Queries;
 using Namespace.Application.Features.Products.Queries;
+using DeveloperStore.Application.Features.Carts.Commands;
 
 [ApiController]
 [Route("api/[controller]")]
@@ -58,10 +59,10 @@ public class CartsController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> PostCartAsync(CreateProductCommand command)
+    public async Task<IActionResult> PostCartAsync(CreateCartCommand command)
     {
         var result = await _mediator.Send(command);
-        return Ok(result);
+        return Ok(result);        
     }
 
     [HttpPut("{id:long}")]

@@ -22,6 +22,7 @@ public class Startup
         services.AddMediatR();
         services.AddAutoMapperConfig();
         services.AddSnowflakeInjection();
+        services.AddServicesInjection();
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

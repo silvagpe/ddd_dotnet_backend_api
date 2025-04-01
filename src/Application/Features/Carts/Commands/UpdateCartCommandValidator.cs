@@ -4,7 +4,7 @@ using FluentValidation;
 namespace DeveloperStore.Application.Features.Carts.Commands;
 
 
-public class UpdateCartCommandValidator : AbstractValidator<CreateCartCommand>
+public class UpdateCartCommandValidator : AbstractValidator<UpdateCartCommand>
 {
     public UpdateCartCommandValidator()
     {

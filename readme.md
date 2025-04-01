@@ -12,11 +12,19 @@ It includes features such as:
 - .NET 8.0
 - Domain-Driven Design (DDD)
 - Entity Framework Core
+- AutoMapper
+- FluentValidation
+- MediatR
+- Npgsql (PostgreSQL)
+- xUnit (for testing)
+- NSubstitute (for mocking in tests)
+- Testcontainers (for integrations tests)
 
-## How to Use
 
-1. Clone the repository and set up the environment.
-2. Build the project using .NET 8.0.
-3. Run the application and interact with the system through the provided interfaces.
+## How to Test
 
-For more details, refer to the documentation or contact the development team.
+In the root folder, you can run the commands below to execute unit tests and integration tests.
+>Note: Docker must be installed to run the integration tests. 
+```
+
+```

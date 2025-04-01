@@ -82,7 +82,7 @@ public class SaleTest
         // Arrange
         var sale = new Sale(_snowflakeIdGenerator.NextId(),_customer, _branch, DateTime.Now);
         sale.AddItem(_snowflakeIdGenerator.NextId(), _product1, 1, 10.00m);
-        var itemId = sale.Items.First().Id;
+        var itemId = sale.Items.First().ProductId;
 
         // Act
         sale.UpdateItemQuantity(itemId, 3);

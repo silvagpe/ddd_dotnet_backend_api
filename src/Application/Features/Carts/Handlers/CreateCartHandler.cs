@@ -67,7 +67,7 @@ public class CreateProductHandler : IRequestHandler<CreateCartCommand, SaleDto?>
             var cartProduct = request.Products.FirstOrDefault(p => p.ProductId == product.Id);
             if (cartProduct != null)
             {
-                sale.AddItem(cartProduct.ProductId, product, cartProduct.Quantity, product.Price);
+                sale.AddItem(_snowflake.NextId(), product, cartProduct.Quantity, product.Price);
             }
         }
 

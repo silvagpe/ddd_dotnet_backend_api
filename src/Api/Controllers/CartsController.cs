@@ -66,7 +66,7 @@ public class CartsController : ControllerBase
     }
 
     [HttpPut("{id:long}")]
-    public async Task<IActionResult> PutCartAsync([FromRoute] long id, [FromBody] UpdateProductCommand command)
+    public async Task<IActionResult> PutCartAsync([FromRoute] long id, [FromBody] UpdateCartCommand command)
     {        
         command.Id = id;        
         var result = await _mediator.Send(command);

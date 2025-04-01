@@ -46,7 +46,7 @@ public class SaleRepository : ISaleRepository
             throw;
         }
     }
-    public Task DeleteAsync(int id, CancellationToken cancellationToken)
+    public Task DeleteAsync(long id, CancellationToken cancellationToken)
     {
         throw new NotImplementedException();
     }
@@ -56,10 +56,12 @@ public class SaleRepository : ISaleRepository
         throw new NotImplementedException();
     }
 
-    public async Task<Sale?> GetByIdAsync(int id, CancellationToken cancellationToken)
+    public async Task<Sale?> GetByIdAsync(long id, CancellationToken cancellationToken)
     {
         return await _context.Sales
-            .Include(s => s.Items)
+            .Include(s => s.Branch)
+            .Include(s => s.Customer)
+            .Include(s => s.Items)            
             .FirstOrDefaultAsync(s => s.Id == id, cancellationToken);
     }
 
@@ -73,8 +75,36 @@ public class SaleRepository : ISaleRepository
         throw new NotImplementedException();
     }
 
-    public Task UpdateAsync(Sale sale, CancellationToken cancellationToken)
+    public async Task<Sale> UpdateAsync(Sale sale, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        await using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
+        try
+        {
+            if (_context.Entry(sale.Branch).State == EntityState.Detached)
+            {
+                _context.Attach(sale.Branch);
+            }
+            if (_context.Entry(sale.Customer).State == EntityState.Detached)
+            {
+                _context.Attach(sale.Customer);
+            }
+            foreach (var item in sale.Items)
+            {
+                if (_context.Entry(item.Product).State == EntityState.Detached)
+                {
+                    _context.Attach(item.Product);
+                }
+            }
+
+            _context.Sales.Update(sale);
+            await _context.SaveChangesAsync(cancellationToken);
+            await transaction.CommitAsync(cancellationToken);
+            return sale;
+        }
+        catch
+        {
+            await transaction.RollbackAsync(cancellationToken);
+            throw;
+        }
     }
 }

@@ -81,6 +81,12 @@ public class AppDbContext : DbContext
             .HasOne(s => s.Branch)
             .WithMany(b => b.Sales)
             .HasForeignKey(s => s.BranchId);
+
+        modelBuilder.Entity<Sale>()
+            .HasMany(s => s.Items)
+            .WithOne(i => i.Sale)
+            .HasForeignKey(i => i.SaleId)
+            .OnDelete(DeleteBehavior.Cascade); 
         
 
         #endregion

@@ -5,10 +5,7 @@ using DeveloperStore.Domain.Entities;
 using DeveloperStore.Domain.Repositories;
 using MediatR;
 
-namespace DeveloperStore.Application.Features.Products.Handlers;
-
-
-
+namespace DeveloperStore.Application.Features.Carts.Handlers;
 public class GetCartByIdHandler : IRequestHandler<GetCartByIdQuery, SaleDto?>
 {
     private readonly ISaleRepository _cartRepository;

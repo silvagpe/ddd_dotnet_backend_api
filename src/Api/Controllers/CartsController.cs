@@ -77,7 +77,7 @@ public class CartsController : ControllerBase
     {
         var command = new DeleteCartCommand(id);
         var result = await _mediator.Send(command);
-        return Ok(new {messge = result});
+        return Ok(new {message = result});
     }
     
 }

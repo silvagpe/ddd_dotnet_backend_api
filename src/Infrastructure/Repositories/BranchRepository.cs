@@ -2,6 +2,7 @@
 using DeveloperStore.Domain.Entities;
 using DeveloperStore.Domain.Repositories;
 using DeveloperStore.Infrastructure.Data;
+using DeveloperStore.Infrastructure.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 namespace DeveloperStore.Infrastructure.Repositories;
@@ -22,13 +23,24 @@ public class BranchRepository : IBranchRepository
             .FirstOrDefaultAsync(p => p.Id == id, cancellationToken);
     }
 
-    public async Task<IEnumerable<Branch>> GetAllAsync(CancellationToken cancellationToken, int page = 1, int pageSize = 10)
-    {        
-        return await _context.Branches
-            .AsNoTracking()
+    public async Task<(IEnumerable<Branch> Branches, int TotalItems)> GetAllAsync(CancellationToken cancellationToken, Dictionary<string, string> fields, string? order, int page = 1, int pageSize = 10)
+    {
+        var query = _context.Branches.AsQueryable();
+
+        query = query.ApplyFilters(fields);
+        
+        if (!string.IsNullOrEmpty(order))
+        {
+            query = query.OrderByDynamic(order);
+        }
+        
+        var totalItems = await query.CountAsync(cancellationToken);
+        var data = await query
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
+
+        return (data, totalItems);
     }
 
     public async Task<long> GetTotalCountAsync(CancellationToken cancellationToken)

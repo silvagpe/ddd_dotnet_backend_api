@@ -2,51 +2,44 @@ using MediatR;
 using DeveloperStore.Application.Models;
 using AutoMapper;
 using DeveloperStore.Infrastructure.Data;
-using DeveloperStore.Application.Extensions;
 using Microsoft.EntityFrameworkCore;
 using DeveloperStore.Application.Features.Products.Queries;
 using DeveloperStore.Application.Features.Products.Dtos;
+using DeveloperStore.Domain.Repositories;
 
 namespace DeveloperStore.Application.Features.Products.Handlers;
 
 public class GetProductsByCategoryPagenatedHandler : IRequestHandler<GetProductsByCategoryQuery, PagedResult<ProductDto>>
 {
 
-    private readonly AppDbContext _dbContext;
+    private readonly IProductRepository _productRepository;
     private readonly IMapper _mapper;
 
-    public GetProductsByCategoryPagenatedHandler(IMapper mapper, AppDbContext dbContext)
+    public GetProductsByCategoryPagenatedHandler(IMapper mapper, IProductRepository productRepository)
     {
         _mapper = mapper;
-        _dbContext = dbContext;
+        _productRepository = productRepository;
     }
 
     public async Task<PagedResult<ProductDto>> Handle(GetProductsByCategoryQuery request, CancellationToken cancellationToken)
     {
-
-        var query = _dbContext.Products.AsQueryable();
+        
         if (!string.IsNullOrEmpty(request.Category))
         {
-            query = query.Where(x => x.Category == request.Category);
+            request.Fields.Add("Category", request.Category);
         }
 
-        query = query.ApplyFilters(request.Fields);
-        
-        if (!string.IsNullOrEmpty(request.Order))
-        {
-            query = query.OrderByDynamic(request.Order);
-        }
-        
-        var totalItems = await query.CountAsync(cancellationToken);
-        var data = await query
-            .Skip((request.Page - 1) * request.PageSize)
-            .Take(request.PageSize)
-            .ToListAsync(cancellationToken);
-
-        var products = _mapper.Map<IEnumerable<ProductDto>>(data);
+        var result = await _productRepository.GetAllAsync(
+            cancellationToken,
+            request.Fields,
+            request.Order,
+            request.Page,
+            request.PageSize
+        );
+            
         return new PagedResult<ProductDto>(
-            products,
-            totalItems,
+            _mapper.Map<IEnumerable<ProductDto>>(result.Products),
+            result.TotalItems,
             request.Page,
             request.PageSize
         );

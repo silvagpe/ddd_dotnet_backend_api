@@ -1,7 +1,7 @@
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 
-namespace DeveloperStore.Application.Helpers;
+namespace DeveloperStore.Infrastructure.Extensions;
 
 public static class ExpressionBuilder
 {

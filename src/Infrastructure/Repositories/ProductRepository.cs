@@ -53,6 +53,14 @@ public class ProductRepository : IProductRepository
             .FirstOrDefaultAsync(p => p.Id == id, cancellationToken);
     }
 
+    public async Task<IList<Product>> GetByIdsAsync(long[] ids, CancellationToken cancellationToken)
+    {
+        return await _context.Products
+            .AsNoTracking()
+            .Where(p => ids.Contains(p.Id))
+            .ToListAsync(cancellationToken);
+    }
+
     public async Task<int> GetTotalCountAsync(CancellationToken cancellationToken)
     {
         return await _context.Products.CountAsync(cancellationToken);

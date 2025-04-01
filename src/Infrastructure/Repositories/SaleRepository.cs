@@ -65,8 +65,8 @@ public class SaleRepository : ISaleRepository
         
         var totalItems = await query.CountAsync(cancellationToken);
         var data = await query
-            .Include(s => s.Branch)
-            .Include(s => s.Customer)
+            // .Include(s => s.Branch)
+            // .Include(s => s.Customer)
             .Include(s => s.Items) 
             .Skip((page - 1) * pageSize)
             .Take(pageSize)

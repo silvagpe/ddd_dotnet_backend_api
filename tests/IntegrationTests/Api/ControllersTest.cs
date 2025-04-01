@@ -542,6 +542,8 @@ public class ControllersTest : IClassFixture<TestFixture>
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
+        responseContent = await response.Content.ReadAsStringAsync();
+        responseContent.Should().NotBeNullOrEmpty();
         var cartResult = System.Text.Json.JsonSerializer.Deserialize<SaleDto>(
             responseContent, new System.Text.Json.JsonSerializerOptions
             {
@@ -579,7 +581,6 @@ public class ControllersTest : IClassFixture<TestFixture>
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         var responseContent = await response.Content.ReadAsStringAsync();
         responseContent.Should().NotBeNullOrEmpty();
-
         var productResult = System.Text.Json.JsonSerializer.Deserialize<ProductDto>(
             responseContent, new System.Text.Json.JsonSerializerOptions
             {
@@ -601,6 +602,8 @@ public class ControllersTest : IClassFixture<TestFixture>
         };
         response = await client.PostAsJsonAsync("/api/Carts", cartToPost);
         response.StatusCode.Should().Be(HttpStatusCode.OK);
+        responseContent = await response.Content.ReadAsStringAsync();
+        responseContent.Should().NotBeNullOrEmpty();
         var cartPosted = System.Text.Json.JsonSerializer.Deserialize<SaleDto>(
             responseContent, new System.Text.Json.JsonSerializerOptions
             {
@@ -609,7 +612,6 @@ public class ControllersTest : IClassFixture<TestFixture>
 
         var cartToUpdate = new UpdateCartCommand
         {
-            Id = cartPosted.Id,
             Date = DateTime.UtcNow,
             UserId = 1,
             Products = new List<CartProduct> {
@@ -622,10 +624,12 @@ public class ControllersTest : IClassFixture<TestFixture>
         };
         
         // Act
-        response = await client.PutAsJsonAsync("/api/Carts", cartToUpdate);
+        response = await client.PutAsJsonAsync($"/api/Carts/{cartPosted.Id}", cartToUpdate);
         // Assert
         
         response.StatusCode.Should().Be(HttpStatusCode.OK);
+        responseContent = await response.Content.ReadAsStringAsync();
+        responseContent.Should().NotBeNullOrEmpty();
         var cartResult = System.Text.Json.JsonSerializer.Deserialize<SaleDto>(
             responseContent, new System.Text.Json.JsonSerializerOptions
             {
@@ -634,7 +638,7 @@ public class ControllersTest : IClassFixture<TestFixture>
 
         cartResult.Should().NotBeNull();
         cartResult.Id.Should().BeGreaterThan(0);
-        cartResult.Id.Should().Be(cartToUpdate.Id);
+        cartResult.Id.Should().Be(cartPosted.Id);
         cartResult.UserId.Should().Be(cartToPost.UserId);
         cartResult.Products.Should().NotBeNullOrEmpty();
         cartResult.Products.Count.Should().Be(cartToPost.Products.Count);

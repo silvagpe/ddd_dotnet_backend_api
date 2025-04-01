@@ -71,7 +71,7 @@ public class CreateProductHandler : IRequestHandler<CreateCartCommand, SaleDto?>
             }
         }
 
-        await _saleRepository.AddAsync(sale, cancellationToken);
+        var saleAdded = await _saleRepository.AddAsync(sale, cancellationToken);
 
         // Publish domain events
         foreach (var domainEvent in sale.DomainEvents)
@@ -82,8 +82,8 @@ public class CreateProductHandler : IRequestHandler<CreateCartCommand, SaleDto?>
         // Clear domain events after publishing
         sale.ClearDomainEvents();
 
-        var saleProductsDto = sale.Items.Select(_mapper.Map<SaleProductDto>).ToList();        
-        var saleDto =  _mapper.Map<Sale, SaleDto>(sale);
+        var saleProductsDto = saleAdded.Items.Select(_mapper.Map<SaleProductDto>).ToList();        
+        var saleDto =  _mapper.Map<Sale, SaleDto>(saleAdded);
 
         saleDto.Products = saleProductsDto;
         return saleDto;

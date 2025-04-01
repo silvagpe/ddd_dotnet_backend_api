@@ -1,6 +1,7 @@
 using DeveloperStore.Domain.Entities;
 using DeveloperStore.Domain.Repositories;
 using DeveloperStore.Infrastructure.Data;
+using DeveloperStore.Infrastructure.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 namespace DeveloperStore.Infrastructure.Repositories;
@@ -51,9 +52,27 @@ public class SaleRepository : ISaleRepository
         throw new NotImplementedException();
     }
 
-    public Task<IEnumerable<Sale>> GetAllAsync(CancellationToken cancellationToken, int page = 1, int pageSize = 10)
+    public async Task<(IEnumerable<Sale> Sales, int TotalItems)> GetAllAsync(CancellationToken cancellationToken, Dictionary<string, string> fields, string? order, int page = 1, int pageSize = 10)
     {
-        throw new NotImplementedException();
+        var query = _context.Sales.AsQueryable();
+
+        query = query.ApplyFilters(fields);
+        
+        if (!string.IsNullOrEmpty(order))
+        {
+            query = query.OrderByDynamic(order);
+        }
+        
+        var totalItems = await query.CountAsync(cancellationToken);
+        var data = await query
+            .Include(s => s.Branch)
+            .Include(s => s.Customer)
+            .Include(s => s.Items) 
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync(cancellationToken);
+
+        return (data, totalItems);
     }
 
     public async Task<Sale?> GetByIdAsync(long id, CancellationToken cancellationToken)

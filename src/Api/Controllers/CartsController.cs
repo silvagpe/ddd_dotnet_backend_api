@@ -7,8 +7,8 @@ using DeveloperStore.Api.Middleware;
 using DeveloperStore.Api.Extensions;
 using DeveloperStore.Application.Features.Products.Commands;
 using DeveloperStore.Application.Features.Products.Queries;
-using Namespace.Application.Features.Products.Queries;
 using DeveloperStore.Application.Features.Carts.Commands;
+using Namespace.Application.Features.Carts.Queries;
 
 [ApiController]
 [Route("api/[controller]")]
@@ -52,7 +52,7 @@ public class CartsController : ControllerBase
                 detail = "Both _page and _pageSize must be greater than 0"
             });
         }
-        var query = new GetProductsQuery(filter.page, filter.pageSize, filter.order, filter.fields);
+        var query = new GetCartsQuery(filter.page, filter.pageSize, filter.order, filter.fields);
         var result = await _mediator.Send(query);
 
         return Ok(result);        

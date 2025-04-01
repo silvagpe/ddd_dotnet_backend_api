@@ -22,8 +22,7 @@ public class GetProductsByCategoryPagenatedHandler : IRequestHandler<GetProducts
     }
 
     public async Task<PagedResult<ProductDto>> Handle(GetProductsByCategoryQuery request, CancellationToken cancellationToken)
-    {
-        
+    {        
         if (!string.IsNullOrEmpty(request.Category))
         {
             request.Fields.Add("Category", request.Category);

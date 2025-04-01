@@ -2,6 +2,8 @@ using System.Net;
 using System.Net.Http.Json;
 using System.Security.Policy;
 using DeveloperStore.Application.Features.Branches.Dtos;
+using DeveloperStore.Application.Features.Carts.Commands;
+using DeveloperStore.Application.Features.Carts.Dtos;
 using DeveloperStore.Application.Features.Products.Commands;
 using DeveloperStore.Application.Features.Products.Dtos;
 using DeveloperStore.Application.Models;
@@ -329,7 +331,7 @@ public class ControllersTest : IClassFixture<TestFixture>
         categories.Should().Contain("category");
 
     }
-    
+
     [Fact]
     public async Task Get_ProductsByCategory_FilterByTitle_And_OrderedDesc_Should_Return_Array()
     {
@@ -491,6 +493,157 @@ public class ControllersTest : IClassFixture<TestFixture>
         productsByCategory.Data.Should().BeInDescendingOrder(b => b.Price);
     }
 
-    
+    [Fact]
+    public async Task Post_Cart_Valid_Should_Return_CartDto()
+    {
+        // Arrange
+        var client = _testFixture.Client;
+        var productToPost = new CreateProductCommand
+        {
+            Title = "Product 1",
+            Description = "Product 1 Description",
+            Price = 100,
+            Category = "category",
+            Image = "image.png",
+            Rating = new RatingDto
+            {
+                Rate = 1.1M,
+                Count = 100
+            },
+        };
+
+        var response = await client.PostAsJsonAsync("/api/Products", productToPost);
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        var responseContent = await response.Content.ReadAsStringAsync();
+        responseContent.Should().NotBeNullOrEmpty();
+
+        var productResult = System.Text.Json.JsonSerializer.Deserialize<ProductDto>(
+            responseContent, new System.Text.Json.JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            });
+
+
+        var cartToPost = new CreateCartCommand
+        {
+            Date = DateTime.UtcNow,
+            UserId = 1,
+            Products = new List<CartProduct> {
+                new CartProduct
+                {
+                    ProductId = productResult.Id,
+                    Quantity = 1
+                }
+            }             
+        };
+        
+        // Act
+        response = await client.PostAsJsonAsync("/api/Carts", cartToPost);
+
+        // Assert
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        responseContent = await response.Content.ReadAsStringAsync();
+        responseContent.Should().NotBeNullOrEmpty();
+        var cartResult = System.Text.Json.JsonSerializer.Deserialize<SaleDto>(
+            responseContent, new System.Text.Json.JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            });
+
+        cartResult.Should().NotBeNull();
+        cartResult.Id.Should().BeGreaterThan(0);
+        cartResult.UserId.Should().Be(cartToPost.UserId);
+        cartResult.Products.Should().NotBeNullOrEmpty();
+        cartResult.Products.Count.Should().Be(cartToPost.Products.Count);
+        cartResult.Products[0].ProductId.Should().Be(cartToPost.Products[0].ProductId);
+    }
+
+    [Fact]
+    public async Task Put_Cart_Valid_Should_Return_CartDto()
+    {
+        // Arrange
+        var client = _testFixture.Client;
+        var productToPost = new CreateProductCommand
+        {
+            Title = "Product 1",
+            Description = "Product 1 Description",
+            Price = 100,
+            Category = "category",
+            Image = "image.png",
+            Rating = new RatingDto
+            {
+                Rate = 1.1M,
+                Count = 100
+            },
+        };
+
+        var response = await client.PostAsJsonAsync("/api/Products", productToPost);
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        var responseContent = await response.Content.ReadAsStringAsync();
+        responseContent.Should().NotBeNullOrEmpty();
+        var productResult = System.Text.Json.JsonSerializer.Deserialize<ProductDto>(
+            responseContent, new System.Text.Json.JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            });
+
+
+        var cartToPost = new CreateCartCommand
+        {
+            Date = DateTime.UtcNow,
+            UserId = 1,
+            Products = new List<CartProduct> {
+                new CartProduct
+                {
+                    ProductId = productResult.Id,
+                    Quantity = 1
+                }
+            }             
+        };
+        response = await client.PostAsJsonAsync("/api/Carts", cartToPost);
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        responseContent = await response.Content.ReadAsStringAsync();
+        responseContent.Should().NotBeNullOrEmpty();
+        var cartPosted = System.Text.Json.JsonSerializer.Deserialize<SaleDto>(
+            responseContent, new System.Text.Json.JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            });
+
+        var cartToUpdate = new UpdateCartCommand
+        {
+            Date = DateTime.UtcNow,
+            UserId = 1,
+            Products = new List<CartProduct> {
+                new CartProduct
+                {
+                    ProductId = productResult.Id,
+                    Quantity = 4
+                }
+            }             
+        };
+        
+        // Act
+        response = await client.PutAsJsonAsync($"/api/Carts/{cartPosted.Id}", cartToUpdate);
+        // Assert
+        
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        responseContent = await response.Content.ReadAsStringAsync();
+        responseContent.Should().NotBeNullOrEmpty();
+        var cartResult = System.Text.Json.JsonSerializer.Deserialize<SaleDto>(
+            responseContent, new System.Text.Json.JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            });
+
+        cartResult.Should().NotBeNull();
+        cartResult.Id.Should().BeGreaterThan(0);
+        cartResult.Id.Should().Be(cartPosted.Id);
+        cartResult.UserId.Should().Be(cartToPost.UserId);
+        cartResult.Products.Should().NotBeNullOrEmpty();
+        cartResult.Products.Count.Should().Be(cartToPost.Products.Count);
+        cartResult.Products[0].ProductId.Should().Be(cartToPost.Products[0].ProductId);
+        cartResult.Products[0].Quantity.Should().Be(cartToUpdate.Products[0].Quantity);
+    }
 
 }

@@ -69,7 +69,7 @@ public class Sale : Entity, IAggregateRoot
 
     public void UpdateItemQuantity(long productId, int quantity)
     {
-        var item = _items.FirstOrDefault(i => i.Id == productId);
+        var item = _items.FirstOrDefault(i => i.ProductId == productId);
         if (item is null)
             throw new BusinessRuleException($"Product with ID {productId} not found in this sale");
 

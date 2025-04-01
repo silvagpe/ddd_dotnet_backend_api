@@ -115,7 +115,7 @@ public class SaleRepository : ISaleRepository
             }
             foreach (var item in sale.Items)
             {
-                if (_context.Entry(item.Product).State == EntityState.Detached)
+                if (item.Product is not null && _context.Entry(item.Product).State == EntityState.Detached)
                 {
                     _context.Attach(item.Product);
                 }

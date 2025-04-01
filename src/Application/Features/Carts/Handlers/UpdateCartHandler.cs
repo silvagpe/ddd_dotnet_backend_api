@@ -60,10 +60,10 @@ public class UpdateCartHandler : IRequestHandler<UpdateCartCommand, SaleDto?>
             throw new ValidationException(validationFailure);
         }
 
-        var productsToRemove = saleExist.Items.Where(i => !validProducts.Any(p => p.Id == i.ProductId)).ToList();
-        foreach (var product in productsToRemove)
+        var saleItemsToRemove = saleExist.Items.Where(i => !validProducts.Any(p => p.Id == i.ProductId)).ToList();
+        foreach (var saleItem in saleItemsToRemove)
         {
-            saleExist.RemoveItem(product.Id);
+            saleExist.RemoveItem(saleItem.ProductId);
         }
 
         var productsToUpdate = validProducts.Where(p => saleExist.Items.Any(i => i.ProductId == p.Id)).ToList();
